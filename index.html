@@ -1741,17 +1741,9 @@
                 </linearGradient>
               </defs>
               <g id="arcLayer"></g>
-              <path class="input-line" d="M492 100 Q598 150 678 230"/>
-              <path class="input-arrow" d="M674 217 L679 231 L665 226"/>
             </svg>
 
             <div class="ring3d" id="ring3d"></div>
-
-            <div class="input-node" aria-label="用户需求输入">
-              <div class="ico"><svg viewBox="0 0 24 24"><path d="M5 5h13v9H8l-3 3.5Z"/><path d="M8 8.5h7M8 11.5h4.5"/></svg></div>
-              <div class="input-text"><b>用户需求</b><span>科研问题理解 · 任务输入</span></div>
-            </div>
-            <div class="input-trans">提出</div>
           </div>
 
           <div class="scheme-switch" id="schemeSwitch3d">
@@ -1896,61 +1888,27 @@
       };
 
       const steps = [
-        { t: "科学假设", s: "假设生成 · 文献推理",      c: "var(--green)",  a: 38,
+        { t: "用户需求", s: "科研问题理解 · 任务输入", c: "var(--blue)",   a: 12,
+          icon: '<path d="M5 5h13v9H8l-3 3.5Z"/><path d="M8 8.5h7M8 11.5h4.5"/>' },
+        { t: "科学假设", s: "假设生成 · 文献推理",      c: "var(--green)",  a: -39,
           icon: '<path d="M9.5 18h5M10.5 21h3"/><path d="M12 3a6 6 0 0 1 3.8 10.7c-.7.6-.9 1-.9 2.3H9.1c0-1.3-.2-1.7-.9-2.3A6 6 0 0 1 12 3Z"/>' },
-        { t: "实验方案", s: "方案生成 · 条件优化",      c: "var(--cyan)",   a: -25,
+        { t: "实验方案", s: "方案生成 · 条件优化",      c: "var(--cyan)",   a: -73,
           icon: '<path d="M5 4h14v16H5Z"/><path d="M8.5 8.5h7M8.5 12h7M8.5 15.5h4.5"/>' },
-        { t: "干 / 湿实验验证", s: "仿真计算 + 真实实验", c: "var(--gold)", a: -90,
+        { t: "干 / 湿实验验证", s: "仿真计算 + 真实实验", c: "var(--gold)", a: -107,
           icon: '<path d="M9 3v6L4.3 17.2A2 2 0 0 0 6 20.2h12a2 2 0 0 0 1.7-3L15 9V3"/><path d="M8 3h8M7.5 14h9"/>' },
-        { t: "结果分析", s: "结果解析 · 证据沉淀",      c: "var(--teal)",  a: -155,
+        { t: "结果分析", s: "结果解析 · 证据沉淀",      c: "var(--teal)",  a: -141,
           icon: '<path d="M4 19V5M4 19h16"/><path d="M7.5 15l3-4 3 2 4-7"/>' },
-        { t: "迭代优化", s: "多轮验证 · 策略优化",      c: "var(--violet)", a: 142,
+        { t: "迭代优化", s: "多轮验证 · 策略优化",      c: "var(--violet)", a: 168,
           icon: '<circle cx="12" cy="12" r="6.5"/><circle cx="12" cy="12" r="2"/><path d="M12 5.5v2M18.5 12h-2M12 18.5v-2M5.5 12h2"/>' },
       ];
-      const trans = ["生成与筛选", "实验编排", "结果反馈", "证据回流", "迭代优化"];
-      const arcEls = [], connDs = [], transEls = [], nodeEls = [];
+      const nodeEls = [];
 
-      const GAP = 17; // 节点两侧留白角度
-      for (let i = 0; i < steps.length; i++) {
-        let cur = steps[i].a;
-        let nxt = steps[(i + 1) % steps.length].a;
-        if (nxt >= cur) nxt -= 360; // 视觉按顺时针递减绘制
-        const a1 = cur - GAP;
-        const a2 = nxt + GAP;
-        const [x1, y1] = toXY(a1, G);
-        const [x2, y2] = toXY(a2, G);
-        const d = `M${x1.toFixed(1)} ${y1.toFixed(1)} A${G.rx} ${G.ry} 0 0 1 ${x2.toFixed(1)} ${y2.toFixed(1)}`;
-
-        const line = document.createElementNS(SVGNS, "path");
-        line.setAttribute("d", d);
-        line.setAttribute("class", "conn-line");
-        arcLayer.appendChild(line);
-        arcEls.push(line);
-        connDs.push(d);
-
-        // 转化标签：弧线中点沿径向外移
-        const mid = (a1 + a2) / 2;
-        const rad = (mid * Math.PI) / 180;
-        let [mx, my] = toXY(mid, G);
-        mx += Math.cos(rad) * 18;
-        my -= Math.sin(rad) * 18;
-        const tl = document.createElement("div");
-        tl.className = "loop-trans";
-        tl.style.left = mx.toFixed(1) + "px";
-        tl.style.top = my.toFixed(1) + "px";
-        tl.style.setProperty("--c", steps[(i + 1) % steps.length].c);
-        tl.textContent = trans[i];
-        loop.appendChild(tl);
-        transEls.push(tl);
-      }
-
+      // 节点卡片：仅创建，位置由 3D 模块按相机投影钉到环上（data-ang = 屏幕角）
       steps.forEach((st, i) => {
-        const [x, y] = toXY(st.a, G);
         const el = document.createElement("div");
         el.className = "step-node";
         el.style.setProperty("--c", st.c);
-        el.style.left = x.toFixed(1) + "px";
-        el.style.top = y.toFixed(1) + "px";
+        el.dataset.ang = st.a;
         el.innerHTML =
           `<span class="idx">${i + 1}</span>` +
           `<div class="ico"><svg viewBox="0 0 24 24">${st.icon}</svg></div>` +
@@ -1959,7 +1917,7 @@
         nodeEls.push(el);
       });
 
-      // 外圈举例资源（弱化 · 氛围）
+      // 外圈举例资源（弱化 · 氛围）— 同样由 3D 模块投影到外圈
       const resData = [
         { a: 150, t: "国家科学数据中心" },
         { a: 116, t: "磐石大模型" },
@@ -1971,62 +1929,24 @@
         { a: -150, t: "星河启智" },
       ];
       resData.forEach((r) => {
-        const [x, y] = toXY(r.a, RES);
         const el = document.createElement("span");
         el.className = "resource-label";
-        el.style.left = x.toFixed(1) + "px";
-        el.style.top = y.toFixed(1) + "px";
+        el.dataset.ang = r.a;
+        el.dataset.outer = "1";
         el.textContent = r.t;
         loop.appendChild(el);
       });
 
-      // ===== 接力点亮：节点逐个亮起，上一步→当前步的连接线高亮 + 沿线飞行粒子（op-stream 风格）=====
+      // ===== 接力点亮：节点逐个亮起 =====
       const N = steps.length;
       let active = 0;
-      let activeD = null;
-      let inputActive = false;
-
-      function emitParticle() {
-        if (!activeD) return;
-        const p = document.createElement("div");
-        p.className = "conn-particle";
-        p.style.offsetPath = "path('" + activeD + "')";
-        p.style.webkitOffsetPath = "path('" + activeD + "')";
-        loop.appendChild(p);
-        setTimeout(() => p.remove(), 1150);
-      }
-
       function relayTick() {
-        const prev = (active - 1 + N) % N;
         nodeEls.forEach((n) => n.classList.remove("is-active"));
-        arcEls.forEach((a) => a.classList.remove("is-active"));
-        transEls.forEach((t) => t.classList.remove("is-flow"));
         if (nodeEls[active]) nodeEls[active].classList.add("is-active");
-        if (arcEls[prev]) arcEls[prev].classList.add("is-active");
-        if (transEls[prev]) transEls[prev].classList.add("is-flow");
-        activeD = connDs[prev];
-        // 用户需求输入仅在「科学假设」(steps[0]) 亮起时点亮
-        inputActive = active === 0;
-        loop.classList.toggle("input-on", inputActive);
         active = (active + 1) % N;
       }
       relayTick();
       setInterval(relayTick, 2600);
-      setInterval(emitParticle, 1200);
-
-      // 用户需求 → 科学假设 的输入信息流（持续流入示意）
-      const INPUT_D = "M492 100 Q598 150 678 230";
-      function emitInput() {
-        if (!inputActive) return;
-        const p = document.createElement("div");
-        p.className = "conn-particle";
-        p.style.offsetPath = "path('" + INPUT_D + "')";
-        p.style.webkitOffsetPath = "path('" + INPUT_D + "')";
-        loop.appendChild(p);
-        setTimeout(() => p.remove(), 1150);
-      }
-      emitInput();
-      setInterval(emitInput, 1400);
     })();
 
     /* ===== 平台运行情况：算力负载节点阵列（点亮比例=负载，随机 flash 模拟活动）===== */
@@ -2420,6 +2340,24 @@
     schemeBtns.forEach(b=> b.addEventListener('click', ()=> setScheme(b.dataset.scheme)));
     setScheme('A');
 
+    // ---- 把 2D 卡片/标签按同一相机投影钉到 3D 环上（统一透视）----
+    const TOP_OFFSET = -28;            // ring3d 相对 #loop 的 top 偏移
+    const _pv = new THREE.Vector3();
+    function proj(screenAng, rad, yl){
+      const a = -screenAng*Math.PI/180;   // 2D 屏幕角 → 3D 地面角
+      _pv.set(rad*Math.cos(a), yl||0, rad*Math.sin(a)).project(camera);
+      const w = ring.clientWidth||1, h = ring.clientHeight||1;
+      return [ (_pv.x*0.5+0.5)*w, (-_pv.y*0.5+0.5)*h + TOP_OFFSET ];
+    }
+    const nodeCards = [...document.querySelectorAll('.step-node[data-ang]')];
+    const ambCards  = [...document.querySelectorAll('.resource-label[data-ang]')];
+    function layout(){
+      nodeCards.forEach(el=>{ const p=proj(parseFloat(el.dataset.ang), R, 0.6);
+        el.style.left=p[0].toFixed(1)+'px'; el.style.top=p[1].toFixed(1)+'px'; });
+      ambCards.forEach(el=>{ const p=proj(parseFloat(el.dataset.ang), R*1.32, 0.4);
+        el.style.left=p[0].toFixed(1)+'px'; el.style.top=p[1].toFixed(1)+'px'; });
+    }
+
     const clock = new THREE.Clock(); let phase=0, tEl=0;
     function frame(){
       requestAnimationFrame(frame);
@@ -2440,6 +2378,7 @@
         ripples.forEach(rp=>{ const t=(tEl/RIP_T+rp.off)%1, rad=RIP_MIN+(RIP_MAX-RIP_MIN)*t;
           rp.L.scale.set(rad,1,rad); rp.mat.opacity = .5*(1-t)*(1-t); });
       }
+      layout();
       renderer.render(scene, camera); labelRenderer.render(scene, camera);
     }
     frame();
