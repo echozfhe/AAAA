@@ -47,29 +47,29 @@
       --font-serif: 'Cormorant Garamond', 'Noto Serif SC', serif;
       --font-title: 'Noto Serif SC', 'Songti SC', 'STSong', serif;
       --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
-      --fs-9: clamp(8px, 0.83vh, 14px);
-      --fs-10: clamp(9px, 0.93vh, 16px);
-      --fs-11: clamp(10px, 1.02vh, 17px);
-      --fs-12: clamp(11px, 1.11vh, 18px);
-      --fs-13: clamp(12px, 1.20vh, 20px);
-      --fs-14: clamp(13px, 1.30vh, 22px);
-      --fs-16: clamp(14px, 1.48vh, 24px);
-      --fs-18: clamp(15px, 1.67vh, 26px);
-      --fs-20: clamp(16px, 1.85vh, 30px);
-      --fs-22: clamp(17px, 2.04vh, 32px);
-      --fs-24: clamp(18px, 2.22vh, 36px);
-      --fs-28: clamp(20px, 2.60vh, 42px);
-      --sp-2: clamp(2px, 0.20vh, 4px);
-      --sp-4: clamp(3px, 0.37vh, 7px);
-      --sp-6: clamp(5px, 0.56vh, 10px);
-      --sp-8: clamp(6px, 0.74vh, 12px);
-      --sp-10: clamp(8px, 0.93vh, 16px);
-      --sp-12: clamp(9px, 1.11vh, 18px);
-      --sp-14: clamp(11px, 1.30vh, 22px);
-      --sp-16: clamp(12px, 1.48vh, 24px);
-      --sp-20: clamp(15px, 1.85vh, 30px);
-      --sp-24: clamp(18px, 2.22vh, 36px);
-      --sp-32: clamp(24px, 2.96vh, 48px);
+      --fs-9: 9px;
+      --fs-10: 10px;
+      --fs-11: 11px;
+      --fs-12: 12px;
+      --fs-13: 13px;
+      --fs-14: 14px;
+      --fs-16: 16px;
+      --fs-18: 18px;
+      --fs-20: 20px;
+      --fs-22: 22px;
+      --fs-24: 24px;
+      --fs-28: 28px;
+      --sp-2: 2px;
+      --sp-4: 4px;
+      --sp-6: 6px;
+      --sp-8: 8px;
+      --sp-10: 10px;
+      --sp-12: 12px;
+      --sp-14: 14px;
+      --sp-16: 16px;
+      --sp-20: 20px;
+      --sp-24: 24px;
+      --sp-32: 32px;
       --t-fast: .12s;
       --t-base: .15s;
       --t-mid: .22s;
@@ -132,7 +132,7 @@
       height: 1080px;
       padding: 24px 28px 26px;
       overflow: hidden;
-      transform: translate(-50%, -50%) scale(var(--stage-scale, 1));
+      transform: translate(-50%, -50%) scale(var(--sx, 1), var(--sy, 1));
       transform-origin: center center;
       border: 1px solid var(--rule);
       background:
@@ -1373,6 +1373,7 @@
     }
 
     .task-list {
+      flex: 1;
       min-height: 0;
       display: grid;
       grid-template-rows: repeat(2, minmax(0, 1fr));
@@ -1903,8 +1904,9 @@
     const clockEl = document.getElementById("clock");
 
     function fitScreen() {
-      const scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
-      screenEl.style.setProperty("--stage-scale", String(Math.max(0.5, scale)));
+      // 非等比拉伸，撑满视窗（不锁 16:9）
+      screenEl.style.setProperty("--sx", String(window.innerWidth / 1920));
+      screenEl.style.setProperty("--sy", String(window.innerHeight / 1080));
     }
 
     function updateClock() {
@@ -2402,7 +2404,9 @@
       renderer.setPixelRatio(Math.min(devicePixelRatio,2));
       renderer.setSize(w,h); labelRenderer.setSize(w,h);
       orbLon.resolution.set(w,h); orbLat.resolution.set(w,h);
-      camera.aspect = w/h;
+      // 屏幕被非等比拉伸(sx,sy)，相机宽高比按拉伸后的真实屏幕比例算 → 球体保持圆
+      const sx = window.innerWidth / 1920, sy = window.innerHeight / 1080;
+      camera.aspect = (w * sx) / (h * sy);
       const halfV = THREE.MathUtils.degToRad(34)/2;
       const halfH = Math.atan(Math.tan(halfV)*camera.aspect);
       // 与 2D 节点椭圆统一透视：半径 R 投影到 ~0.766 半宽(≈节点环 rx)，俯角令扁率≈0.514
