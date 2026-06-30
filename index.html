@@ -2160,18 +2160,15 @@
     setInterval(updateClock, 1000);
   </script>
 
-  <script type="importmap">
-  { "imports": {
-    "three": "./vendor/three/three.module.js",
-    "three/addons/": "./vendor/three/addons/"
-  } }
-  </script>
-  <script type="module">
-  import * as THREE from 'three';
-  import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
-  import { Line2 } from 'three/addons/lines/Line2.js';
-  import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
-  import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
+  <script src="./vendor/three-umd/three.min.js"></script>
+  <script src="./vendor/three-umd/lines/LineSegmentsGeometry.js"></script>
+  <script src="./vendor/three-umd/lines/LineGeometry.js"></script>
+  <script src="./vendor/three-umd/lines/LineMaterial.js"></script>
+  <script src="./vendor/three-umd/lines/LineSegments2.js"></script>
+  <script src="./vendor/three-umd/lines/Line2.js"></script>
+  <script src="./vendor/three-umd/renderers/CSS2DRenderer.js"></script>
+  <script>
+  const { CSS2DRenderer, CSS2DObject, Line2, LineMaterial, LineGeometry } = THREE;
 
   const ring = document.getElementById('ring3d');
   if (ring) {
