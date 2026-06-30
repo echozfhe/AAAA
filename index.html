@@ -588,9 +588,13 @@
     }
 
     .loop-svg .conn-line.is-active {
-      stroke: var(--vermilion-5);
-      stroke-width: 1.2;
+      stroke: var(--vermilion-6);
+      stroke-width: 1.6;
+      filter: drop-shadow(0 0 4px color-mix(in srgb, var(--vermilion) 55%, transparent));
+      animation: connFlow .9s linear infinite;
     }
+
+    @keyframes connFlow { to { stroke-dashoffset: -12; } }
 
     .conn-particle {
       position: absolute;
@@ -1994,6 +1998,14 @@
       function relayTick() {
         nodeEls.forEach((n) => n.classList.remove("is-active"));
         if (nodeEls[active]) nodeEls[active].classList.add("is-active");
+        // 入边弧线 + 转化文字同步点亮（arc[prev] 连接 prev→当前节点）
+        const arcs = document.querySelectorAll(".conn-line[data-arc]");
+        const transs = document.querySelectorAll(".loop-trans[data-arc]");
+        arcs.forEach((a) => a.classList.remove("is-active"));
+        transs.forEach((t) => t.classList.remove("is-flow"));
+        const prev = (active - 1 + N) % N;
+        if (arcs[prev]) arcs[prev].classList.add("is-active");
+        if (transs[prev]) transs[prev].classList.add("is-flow");
         const lk = LINK[active] || {};
         (lk.res || []).forEach((i) => pulse(resItems[i]));
         (lk.load || []).forEach((i) => pulse(loadCards[i]));
@@ -2150,8 +2162,8 @@
 
   <script type="importmap">
   { "imports": {
-    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    "three": "./vendor/three/three.module.js",
+    "three/addons/": "./vendor/three/addons/"
   } }
   </script>
   <script type="module">
@@ -2425,11 +2437,45 @@
     }
     const nodeCards = [...document.querySelectorAll('.step-node[data-ang]')];
     const ambCards  = [...document.querySelectorAll('.resource-label[data-ang]')];
+    // 节点之间的连接弧（沿 3D 环投影）+ 转化文字
+    const loopEl3d = document.getElementById('loop');
+    const arcLayer3d = document.getElementById('arcLayer');
+    const Nn = nodeCards.length;
+    const TRANS = ["提出", "生成与筛选", "实验编排", "结果反馈", "证据回流", "迭代优化"];
+    const arcEls3 = [], transEls3 = [];
+    try {
+      if (arcLayer3d && Nn) {
+        for (let i = 0; i < Nn; i++) {
+          const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          p.setAttribute('class', 'conn-line'); p.setAttribute('data-arc', i);
+          arcLayer3d.appendChild(p); arcEls3.push(p);
+          const tl = document.createElement('div'); tl.className = 'loop-trans'; tl.setAttribute('data-arc', i);
+          tl.textContent = TRANS[i] || '';
+          tl.style.setProperty('--c', nodeCards[(i + 1) % Nn].style.getPropertyValue('--c') || 'var(--vermilion)');
+          if (loopEl3d) loopEl3d.appendChild(tl);
+          transEls3.push(tl);
+        }
+      }
+    } catch (e) { /* 弧线创建失败不影响中央 3D */ }
     function layout(){
       nodeCards.forEach(el=>{ const p=proj(parseFloat(el.dataset.ang), R, 0.6);
         el.style.left=p[0].toFixed(1)+'px'; el.style.top=p[1].toFixed(1)+'px'; });
       ambCards.forEach(el=>{ const p=proj(parseFloat(el.dataset.ang), R*1.32, 0.4);
         el.style.left=p[0].toFixed(1)+'px'; el.style.top=p[1].toFixed(1)+'px'; });
+      try {
+        for (let i = 0; i < arcEls3.length; i++) {
+          const a0 = parseFloat(nodeCards[i].dataset.ang);
+          const a1 = parseFloat(nodeCards[(i + 1) % Nn].dataset.ang);
+          let dlt = ((a1 - a0 + 180) % 360 + 360) % 360 - 180;   // 取短弧
+          let d = '';
+          for (let k = 0; k <= 16; k++) { const p = proj(a0 + dlt * (k / 16), R, 0.6); d += (k ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1); }
+          arcEls3[i].setAttribute('d', d);
+          const mp = proj(a0 + dlt * 0.5, R * 1.12, 0.6);
+          transEls3[i].style.left = mp[0].toFixed(1) + 'px';
+          transEls3[i].style.top = mp[1].toFixed(1) + 'px';
+          transEls3[i].style.transform = 'translate(-50%,-50%)';
+        }
+      } catch (e) { /* 弧线更新失败不影响节点定位 */ }
     }
 
     const clock = new THREE.Clock(); let phase=0, tEl=0;
