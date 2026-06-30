@@ -363,7 +363,7 @@
       display: grid;
       grid-template-rows: repeat(7, minmax(0, 1fr));
       gap: 0;
-      padding: 4px 22px;
+      padding: 4px 0;
       border: 1px solid var(--rule);
       border-radius: 2px;
       background: rgba(16, 19, 26, .78);
@@ -376,7 +376,7 @@
       grid-template-columns: 48px minmax(0, 1fr) auto;
       align-items: center;
       gap: 14px;
-      padding: 0;
+      padding: 0 18px;
       border: 0;
       border-bottom: 1px solid rgba(214, 230, 244, 0.09);
       border-radius: 2px;
@@ -1636,6 +1636,43 @@
       50% { opacity: 0.85; transform: translate(-50%, -50%) translateY(-13px); }
     }
 
+    /* ===== 开场编排 ===== */
+    @keyframes bootIn { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+    .topbar { animation: bootIn .7s var(--ease-out) both; }
+    .resource-panel { animation: bootIn .7s var(--ease-out) .14s both; }
+    .center-stage { animation: bootIn .8s var(--ease-out) .28s both; }
+    .right-panel { animation: bootIn .7s var(--ease-out) .42s both; }
+    .domain-row { animation: bootIn .6s var(--ease-out) .58s both; }
+
+    .boot-scan {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 170px;
+      z-index: 40;
+      pointer-events: none;
+      opacity: 0;
+      background: linear-gradient(180deg, transparent, rgba(122,165,219,.14) 44%, rgba(160,194,232,.30) 50%, rgba(122,165,219,.14) 56%, transparent);
+      animation: bootScan 1.5s var(--ease) .25s both;
+    }
+    @keyframes bootScan {
+      0% { transform: translateY(-190px); opacity: 0; }
+      8% { opacity: 1; }
+      88% { opacity: 1; }
+      100% { transform: translateY(1100px); opacity: 0; }
+    }
+
+    /* ===== 跨模块联动脉冲 ===== */
+    .resource-item { transition: background .4s var(--ease); }
+    .resource-icon { transition: box-shadow .4s var(--ease), border-color .4s var(--ease); }
+    .resource-item.link-on { background: color-mix(in srgb, var(--accent) 13%, transparent); }
+    .resource-item.link-on .resource-icon { border-color: var(--accent); box-shadow: 0 0 14px -2px color-mix(in srgb, var(--accent) 55%, transparent); }
+    .load-card { transition: border-color .4s var(--ease), box-shadow .4s var(--ease); }
+    .load-card.link-on { border-color: var(--vermilion); box-shadow: 0 0 20px -4px color-mix(in srgb, var(--vermilion) 55%, transparent); }
+    .task-item { transition: border-color .4s var(--ease), box-shadow .4s var(--ease); }
+    .task-item.link-on { border-color: var(--accent); box-shadow: 0 0 20px -4px color-mix(in srgb, var(--accent) 55%, transparent); }
+
     @media (prefers-reduced-motion: reduce) {
       *,
       *::before,
@@ -1853,6 +1890,7 @@
           </section>
         </aside>
       </section>
+      <div class="boot-scan" aria-hidden="true"></div>
     </div>
   </main>
 
@@ -1937,12 +1975,29 @@
         loop.appendChild(el);
       });
 
-      // ===== 接力点亮：节点逐个亮起 =====
+      // ===== 接力点亮：节点逐个亮起 + 跨模块联动脉冲 =====
       const N = steps.length;
       let active = 0;
+      const resItems = [...document.querySelectorAll(".resource-item")];
+      const loadCards = [...document.querySelectorAll(".load-card")];
+      const taskItems = [...document.querySelectorAll(".task-item")];
+      // 每个环节联动的资源/算力/任务（按当前环节"点亮谁、谁就响"）
+      const LINK = [
+        { res: [0],    load: [],     task: [] },     // 用户需求 → 科学数据
+        { res: [3],    load: [0],    task: [] },     // 科学假设 → 科学模型 · 智算
+        { res: [4],    load: [0, 1], task: [1] },    // 实验方案 → 科学工具 · 算力 · 电催化
+        { res: [6],    load: [0, 1], task: [0, 1] }, // 干/湿验证 → 自主实验室 · 算力 · 两任务
+        { res: [0, 1], load: [0],    task: [0] },     // 结果分析 → 数据 · 智算 · 蛋白质
+        { res: [5],    load: [],     task: [] },     // 迭代优化 → AI4S 平台
+      ];
+      const pulse = (el) => { if (!el) return; el.classList.add("link-on"); setTimeout(() => el.classList.remove("link-on"), 1300); };
       function relayTick() {
         nodeEls.forEach((n) => n.classList.remove("is-active"));
         if (nodeEls[active]) nodeEls[active].classList.add("is-active");
+        const lk = LINK[active] || {};
+        (lk.res || []).forEach((i) => pulse(resItems[i]));
+        (lk.load || []).forEach((i) => pulse(loadCards[i]));
+        (lk.task || []).forEach((i) => pulse(taskItems[i]));
         active = (active + 1) % N;
       }
       relayTick();
@@ -2066,6 +2121,25 @@
           }
         }, 760);
       });
+    })();
+
+    /* ===== 开场：数字从 0 滚动到目标值 ===== */
+    (function bootCountUp(){
+      const ease = (t) => 1 - Math.pow(1 - t, 3);
+      function up(el, dur){
+        const raw = (el.textContent || "").trim();
+        const m = raw.match(/^(\d+(?:\.\d+)?)(.*)$/);
+        if (!m) return;
+        const target = parseFloat(m[1]), suffix = m[2], t0 = performance.now();
+        function step(now){
+          const t = Math.min(1, (now - t0) / dur);
+          el.textContent = Math.round(target * ease(t)) + suffix;
+          if (t < 1) requestAnimationFrame(step); else el.textContent = m[1] + suffix;
+        }
+        requestAnimationFrame(step);
+      }
+      document.querySelectorAll(".resource-value").forEach((el) => up(el, 1300));
+      document.querySelectorAll(".cluster-stat .util").forEach((el) => up(el, 1300));
     })();
 
     window.addEventListener("resize", fitScreen);
