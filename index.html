@@ -2394,7 +2394,7 @@
     const NSTEP = nodeCards.length;          // 7
     const SLOT = 360 / NSTEP;                // 51.43°/节点
     const FRONT = -90;                       // 屏幕角：地面最前端（最靠近观察者）
-    const SPIN_FAST = 8;                     // deg/s 节点旋转速度
+    const SPIN_FAST = 14;                    // deg/s 节点旋转速度
     const HOLD_TIME = 3;                     // 迭代优化在最前端时定格秒数（slogan 同步亮起）
     const baseAng = (i) => FRONT + i * SLOT; // 节点 i 在 spinDeg=i*SLOT 时转到最前端
     const nodeAng = (i) => baseAng(i) - spinDeg;
@@ -2451,19 +2451,33 @@
     }
 
     const clock = new THREE.Clock(); let tEl = 0;
-    // 迭代旋转：依次转到最前端点亮；迭代优化到最前端时定格 3s（slogan 亮起），再无缝循环迭代
+    // 缓入缓出：节点旋转有节奏感，靠近节点时减速，节点间加速
+    const SLOT_TIME = SLOT / SPIN_FAST;           // 每个节点间隔耗时（秒）
+    let rawSlotProgress = 0;                      // 线性累计（以 slot 为单位）
+    function easeInOutQuart(t) {
+      if (t < 0.12) return 0;
+      if (t > 0.88) return 1;
+      const s = (t - 0.12) / 0.76;
+      return s < 0.5 ? 8 * s * s * s * s : 1 - Math.pow(-2 * s + 2, 4) / 2;
+    }
     function stepLoop(dt){
       if (holding) {                                   // 定格：节点与球体都停 3s
         holdT += dt;
         if (holdT >= HOLD_TIME) holding = false;
       } else {
-        spinDeg += SPIN_FAST * dt;
-        orbYaw -= SPIN_FAST * Math.PI / 180 * dt;      // 球体同速顺时针
-        if (!heldThisCycle && spinDeg >= 6 * SLOT) {   // 迭代优化到最前端 → 定格 + slogan 亮起
-          spinDeg = 6 * SLOT; holding = true; holdT = 0; heldThisCycle = true;
+        rawSlotProgress += dt / SLOT_TIME;
+        // 迭代优化到最前端 → 定格
+        if (!heldThisCycle && rawSlotProgress >= 6) {
+          rawSlotProgress = 6;
+          holding = true; holdT = 0; heldThisCycle = true;
           lightFloorTag();
         }
-        if (spinDeg >= 7 * SLOT) { spinDeg -= 7 * SLOT; heldThisCycle = false; }  // 无缝回环
+        // 无缝回环
+        if (rawSlotProgress >= 7) { rawSlotProgress -= 7; heldThisCycle = false; }
+        // 用缓动函数把线性进度映射为弹性角度
+        const slotIdx = Math.floor(rawSlotProgress);
+        const slotFrac = rawSlotProgress - slotIdx;
+        spinDeg = (slotIdx + easeInOutQuart(slotFrac)) * SLOT;
       }
       // 最前端节点检测 → 点亮 + 星空按拍闪烁（定格时保持迭代优化高亮）
       let best = 0, bestd = 1e9;
