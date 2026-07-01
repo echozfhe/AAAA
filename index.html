@@ -1017,8 +1017,10 @@
     }
 
     .floor-tag.visible {
-      opacity: .4;
+      opacity: 1;
       transform: translateX(-50%) translateY(0);
+      border-color: color-mix(in srgb, var(--vermilion) 62%, transparent);
+      box-shadow: 0 0 46px -4px color-mix(in srgb, var(--vermilion) 55%, transparent), inset 0 1px 0 rgba(255, 255, 255, .06);
     }
 
     .floor-tag.lit {
@@ -2023,8 +2025,8 @@
           y = 52 + row * 60 + ((k * 29) % 34);
         } else {                                            // 底部区域（5 个）
           const j = k - 9;                                  // 0~4
-          const bx = [60, 180, 700, 884, 730];
-          const by = [718, 750, 710, 760, 780];
+          const bx = [60, 180, 724, 908, 754];
+          const by = [718, 750, 686, 736, 756];
           x = bx[j]; y = by[j];
         }
         el.style.left = x + "px";
