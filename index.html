@@ -132,7 +132,7 @@
       height: 1080px;
       padding: 24px 28px 26px;
       overflow: hidden;
-      transform: translate(-50%, -50%) scale(var(--sx, 1), var(--sy, 1));
+      transform: translate(-50%, -50%) scale(var(--s, 1));
       transform-origin: center center;
       border: 1px solid var(--rule);
       background:
@@ -173,8 +173,8 @@
 
     .logo-mark {
       display: block;
-      width: auto;
-      height: 42px;
+      width: 240px;
+      height: auto;
       border: 0;
       background: transparent;
     }
@@ -207,7 +207,7 @@
 
     .hero-title {
       text-align: center;
-      transform: translateY(-1px);
+      transform: translateX(-30px);
     }
 
     .hero-title h1 {
@@ -226,7 +226,7 @@
       display: flex;
       justify-content: center;
       gap: 42px;
-      color: var(--ink-faint);
+      color: var(--ink-soft);
       font-family: var(--font-mono);
       font-size: 13px;
       line-height: 1;
@@ -632,9 +632,9 @@
     }
 
     .loop-svg .conn-line.is-active {
-      stroke: var(--vermilion-6);
+      stroke: var(--arc-c, var(--vermilion-6));
       stroke-width: 1.6;
-      filter: drop-shadow(0 0 4px color-mix(in srgb, var(--vermilion) 55%, transparent));
+      filter: drop-shadow(0 0 4px color-mix(in srgb, var(--arc-c, var(--vermilion-6)) 55%, transparent));
       animation: connFlow .9s linear infinite;
     }
 
@@ -700,23 +700,45 @@
       position: absolute;
       z-index: 6;
       transform: translate(-50%, -50%);
-      padding: 0;
-      border: 0;
-      border-radius: 0;
+      padding: 5px 14px 5px 12px;
+      border: 1px solid transparent;
+      border-radius: 100px;
       background: transparent;
-      color: var(--ink-faint);
+      color: transparent;
       font-family: var(--font-mono);
-      font-size: var(--fs-10);
+      font-size: var(--fs-11);
+      font-weight: 560;
       letter-spacing: 1px;
       white-space: nowrap;
       text-shadow: none;
       opacity: 0;
-      transition: color .4s var(--ease), text-shadow .4s var(--ease), opacity .4s var(--ease);
+      pointer-events: none;
+      transition: color .4s var(--ease), opacity .4s var(--ease), border-color .4s var(--ease), background .4s var(--ease), box-shadow .4s var(--ease);
+    }
+
+    .loop-trans::before {
+      content: "";
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      margin-right: 7px;
+      border-radius: 50%;
+      background: var(--c);
+      box-shadow: 0 0 8px var(--c);
+      vertical-align: middle;
+      opacity: 0;
+      transition: opacity .4s var(--ease);
     }
 
     .loop-trans.is-flow {
-      color: color-mix(in srgb, var(--c) 72%, var(--ink));
-      text-shadow: 0 0 8px color-mix(in srgb, var(--c) 45%, transparent);
+      color: color-mix(in srgb, var(--c) 90%, #fff);
+      border-color: color-mix(in srgb, var(--c) 55%, transparent);
+      background: color-mix(in srgb, var(--c) 14%, rgba(14, 17, 22, .92));
+      box-shadow: 0 0 16px -3px color-mix(in srgb, var(--c) 50%, transparent);
+      opacity: 1;
+    }
+
+    .loop-trans.is-flow::before {
       opacity: 1;
     }
 
@@ -978,26 +1000,59 @@
       white-space: nowrap;
     }
 
-    /* 进化 slogan：3D 场景下方，带框，默认压暗，迭代优化定格时亮起 3s */
+    /* 进化 slogan：3D 场景下方，带框，首次出现后常驻，定格时高亮 */
     .floor-tag {
       position: absolute;
       left: 50%;
-      bottom: 22px;
-      transform: translateX(-50%);
+      bottom: 72px;
+      transform: translateX(-50%) translateY(12px);
       z-index: 6;
       padding: 16px 52px;
       border: 1px solid color-mix(in srgb, var(--vermilion) 30%, var(--rule));
       border-radius: 4px;
       background: rgba(26, 30, 38, .82);
-      opacity: .3;
-      transition: opacity .5s var(--ease), box-shadow .5s var(--ease), border-color .5s var(--ease);
+      opacity: 0;
       pointer-events: none;
+      transition: opacity .45s var(--ease), box-shadow .45s var(--ease), border-color .45s var(--ease), transform .45s var(--ease-out);
+    }
+
+    .floor-tag.visible {
+      opacity: .4;
+      transform: translateX(-50%) translateY(0);
     }
 
     .floor-tag.lit {
       opacity: 1;
+      transform: translateX(-50%) translateY(0);
       border-color: color-mix(in srgb, var(--vermilion) 62%, transparent);
       box-shadow: 0 0 46px -4px color-mix(in srgb, var(--vermilion) 55%, transparent), inset 0 1px 0 rgba(255, 255, 255, .06);
+    }
+
+    .floor-arrow {
+      position: absolute;
+      left: 50%;
+      bottom: 138px;
+      transform: translateX(-50%) translateY(-4px);
+      z-index: 6;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .35s var(--ease), transform .35s var(--ease-out);
+    }
+
+    .floor-arrow.lit {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .floor-arrow svg {
+      width: 36px;
+      height: 28px;
+      fill: none;
+      stroke: var(--vermilion);
+      stroke-width: 2.4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 2px 8px color-mix(in srgb, var(--vermilion) 60%, transparent));
     }
 
     .floor-tag-title {
@@ -1680,10 +1735,7 @@
     <div class="screen" id="screen">
       <header class="topbar">
         <div class="logo-block">
-          <img class="logo-mark" src="./pujiang-mark.svg" alt="浦江国家实验室标识" />
-          <div class="logo-text">
-            <b>浦江国家实验室</b>
-          </div>
+          <img class="logo-mark" src="./pujiang-logo.svg" alt="浦江国家实验室标识" />
         </div>
 
         <div class="hero-title">
@@ -1769,7 +1821,10 @@
             <div class="ring3d" id="ring3d"></div>
           </div>
 
-          <div class="floor-tag" aria-hidden="true">
+          <div class="floor-arrow" id="floorArrow" aria-hidden="true">
+            <svg viewBox="0 0 36 28"><path d="M4 6l14 16L32 6"/><path d="M4 2l14 16L32 2" opacity=".4"/></svg>
+          </div>
+          <div class="floor-tag" id="floorTag" aria-hidden="true">
             <div class="floor-tag-title">科研轨迹数据推动平台进化</div>
           </div>
         </section>
@@ -1879,9 +1934,8 @@
     const clockEl = document.getElementById("clock");
 
     function fitScreen() {
-      // 非等比拉伸，撑满视窗（不锁 16:9）
-      screenEl.style.setProperty("--sx", String(window.innerWidth / 1920));
-      screenEl.style.setProperty("--sy", String(window.innerHeight / 1080));
+      const s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+      screenEl.style.setProperty("--s", String(s));
     }
 
     function updateClock() {
@@ -1940,7 +1994,6 @@
 
       // 外圈举例资源（弱化 · 氛围）— 同样由 3D 模块投影到外圈
       const resData = [
-        { a: 150, t: "国家科学数据中心" },
         { a: 116, t: "磐石大模型" },
         { a: 88,  t: "书生大模型" },
         { a: 64,  t: "DFT 计算" },
@@ -1954,25 +2007,25 @@
         { a: -128, t: "天河超算" },
         { a: -150, t: "星河启智" },
         { a: 176, t: "中国科技云" },
+        { a: 150, t: "国家科学数据中心" },
       ];
-      // 外圈资源名：大部分散布在顶部两行，另取 4 个填到底部左右两角（星空，不随节点旋转）
+      // 外圈资源名：前 9 个散布在顶部两行（整体下移），后 5 个底部左右分布
       resData.forEach((r, k) => {
         const el = document.createElement("span");
         el.className = "resource-label";
         el.dataset.outer = "1";
         el.textContent = r.t;
         let x, y;
-        if (k < 10) {                                       // 顶部两行
+        if (k < 9) {                                        // 顶部两行（下移）
           const col = k % 5;
           const row = Math.floor(k / 5);
           x = 70 + col * 190 + (((k * 23) % 46) - 23);
-          y = 24 + row * 60 + ((k * 29) % 34);
-        } else {                                            // 底部左右角
-          const j = k - 10;                                 // 0~3
-          const right = j >= 2;
-          const s = j % 2;
-          x = right ? (720 + s * 130) : (60 + s * 120);
-          y = 718 + s * 46;
+          y = 52 + row * 60 + ((k * 29) % 34);
+        } else {                                            // 底部区域（5 个）
+          const j = k - 9;                                  // 0~4
+          const bx = [60, 180, 700, 884, 730];
+          const by = [718, 750, 710, 760, 780];
+          x = bx[j]; y = by[j];
         }
         el.style.left = x + "px";
         el.style.top = y + "px";
@@ -2001,10 +2054,11 @@
         if (nodeEls[idx]) nodeEls[idx].classList.add("is-active");
         const arcs = document.querySelectorAll(".conn-line[data-arc]");
         const transs = document.querySelectorAll(".loop-trans[data-arc]");
-        arcs.forEach((a) => a.classList.remove("is-active"));
+        arcs.forEach((a) => { a.classList.remove("is-active"); a.style.removeProperty("--arc-c"); });
         transs.forEach((t) => t.classList.remove("is-flow"));
         const prev = (idx - 1 + N) % N;
-        if (arcs[prev]) arcs[prev].classList.add("is-active");
+        const activeColor = nodeEls[idx] ? nodeEls[idx].style.getPropertyValue("--c") : "";
+        if (arcs[prev]) { arcs[prev].classList.add("is-active"); arcs[prev].style.setProperty("--arc-c", activeColor); }
         if (transs[prev]) transs[prev].classList.add("is-flow");
         const lk = LINK[idx] || {};
         (lk.load || []).forEach((i) => pulse(loadCards[i]));
@@ -2288,12 +2342,9 @@
       renderer.setPixelRatio(Math.min(devicePixelRatio,2));
       renderer.setSize(w,h); labelRenderer.setSize(w,h);
       orbLon.resolution.set(w,h); orbLat.resolution.set(w,h);
-      // 屏幕被非等比拉伸(sx,sy)，相机宽高比按拉伸后的真实屏幕比例算 → 球体保持圆
-      const sx = window.innerWidth / 1920, sy = window.innerHeight / 1080;
-      camera.aspect = (w * sx) / (h * sy);
+      camera.aspect = w / h;
       const halfV = THREE.MathUtils.degToRad(34)/2;
       const halfH = Math.atan(Math.tan(halfV)*camera.aspect);
-      // 与 2D 节点椭圆统一透视：半径 R 投影到 ~0.766 半宽(≈节点环 rx)，俯角令扁率≈0.514
       const dist = R / (0.766 * Math.tan(halfH));
       camera.position.set(0, dist*0.514, dist*0.857);
       camera.lookAt(0, 0, 0); camera.updateProjectionMatrix();
@@ -2341,17 +2392,27 @@
     const NSTEP = nodeCards.length;          // 7
     const SLOT = 360 / NSTEP;                // 51.43°/节点
     const FRONT = -90;                       // 屏幕角：地面最前端（最靠近观察者）
-    const SPIN_FAST = 15;                    // deg/s 迭代速度（~20s 到迭代优化）
+    const SPIN_FAST = 8;                     // deg/s 节点旋转速度
     const HOLD_TIME = 3;                     // 迭代优化在最前端时定格秒数（slogan 同步亮起）
     const baseAng = (i) => FRONT + i * SLOT; // 节点 i 在 spinDeg=i*SLOT 时转到最前端
     const nodeAng = (i) => baseAng(i) - spinDeg;
     const floorTagEl = document.querySelector('.floor-tag');
+    const floorArrowEl = document.querySelector('.floor-arrow');
     let floorTimer = null;
+    let floorShown = false;
     function lightFloorTag(){
       if (!floorTagEl) return;
+      if (!floorShown) {
+        floorShown = true;
+        floorTagEl.classList.add('visible');
+      }
       floorTagEl.classList.add('lit');
+      if (floorArrowEl) floorArrowEl.classList.add('lit');
       clearTimeout(floorTimer);
-      floorTimer = setTimeout(() => floorTagEl.classList.remove('lit'), 3000);
+      floorTimer = setTimeout(() => {
+        floorTagEl.classList.remove('lit');
+        if (floorArrowEl) floorArrowEl.classList.remove('lit');
+      }, 3000);
     }
     function layout(){
       nodeCards.forEach((el, i) => {
@@ -2416,11 +2477,11 @@
       if(!reduce){
         tEl += dt;
         stepLoop(dt);
-        orbGroupA.rotation.y = orbYaw;
+        orbGroupA.rotation.y = -tEl * 0.42;
         orbGroupA.scale.setScalar(1 + 0.03*Math.sin(tEl*1.1));
-        particles.rotation.y = -tEl*0.45;
-        coreGroup.rotation.y = -tEl*0.5; coreGroup.rotation.x = Math.sin(tEl*0.3)*0.4;
-        innerRings.forEach(r=>{ r.L.rotation.y = tEl*r.sp; });
+        particles.rotation.y = tEl*2.1;
+        coreGroup.rotation.y = -tEl*0.8; coreGroup.rotation.x = Math.sin(tEl*0.3)*0.4;
+        innerRings.forEach(r=>{ r.L.rotation.y = tEl*r.sp*1.6; });
         innerParts.forEach(p=>{ const a=tEl*p.sp+p.off, yb=p.r*Math.sin(a);
           p.m.position.set(p.r*Math.cos(a), yb*Math.cos(p.tilt), yb*Math.sin(p.tilt)); });
         ripples.forEach(rp=>{ const t=(tEl/RIP_T+rp.off)%1, rad=RIP_MIN+(RIP_MAX-RIP_MIN)*t;
@@ -2487,9 +2548,9 @@
           {
             name: 'pulse', type: 'effectScatter', coordinateSystem: 'geo', zlevel: 2,
             showEffectOn: 'render',
-            rippleEffect: { period: 3, brushType: 'stroke', scale: 3.6 },
-            symbolSize: 7, label: { show: false },
-            data: RES.map(r => ({ value: r.coord, itemStyle: { color: r.color, shadowBlur: 6, shadowColor: r.color } })),
+            rippleEffect: { period: 2.2, brushType: 'stroke', scale: 5 },
+            symbolSize: 10, label: { show: false },
+            data: RES.map(r => ({ value: r.coord, itemStyle: { color: r.color, shadowBlur: 14, shadowColor: r.color, opacity: 1 } })),
           },
           {
             name: 'icons', type: 'scatter', coordinateSystem: 'geo', zlevel: 3,
