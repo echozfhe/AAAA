@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>智能科研基座平台｜需求方架构版</title>
+  <title>科学智能基座平台｜需求方架构版</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Serif+SC:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -172,23 +172,11 @@
     }
 
     .logo-mark {
-      position: relative;
-      width: 50px;
-      height: 50px;
-      display: grid;
-      place-items: center;
-      border: 1px solid var(--rule);
-      border-radius: 2px;
-      background: var(--paper-cool);
-      color: var(--ink);
-    }
-
-    .logo-mark svg {
-      width: 27px;
-      height: 27px;
-      stroke: currentColor;
-      stroke-width: 1.8;
-      fill: none;
+      display: block;
+      width: auto;
+      height: 42px;
+      border: 0;
+      background: transparent;
     }
 
     .logo-text {
@@ -357,6 +345,50 @@
       background: transparent;
     }
 
+    /* 左栏上半：资源连接地图 */
+    .resource-map {
+      flex: 0 0 322px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 0;
+    }
+
+    .map-meta {
+      color: var(--ink-faint);
+      font-family: var(--font-mono);
+      font-size: var(--fs-10);
+      font-weight: 500;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .map-canvas {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(122, 165, 219, .07), transparent 60%),
+        rgba(16, 19, 26, .78);
+    }
+
+    .map-chart {
+      position: absolute;
+      inset: 0;
+    }
+
+    /* 左栏下半：外部资源连接列表 */
+    .resource-connect {
+      flex: 1 1 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 0;
+    }
+
     .resource-list {
       flex: 1;
       min-height: 0;
@@ -393,6 +425,18 @@
       content: none;
     }
 
+    .resource-item::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--accent);
+      opacity: .88;
+      box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 42%, transparent);
+    }
+
     .resource-icon {
       width: 44px;
       height: 44px;
@@ -400,16 +444,16 @@
       place-items: center;
       border-radius: 2px;
       color: var(--accent);
-      background: color-mix(in srgb, var(--accent) 10%, rgba(18, 21, 27, .58));
-      border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--rule));
-      box-shadow: none;
+      background: color-mix(in srgb, var(--accent) 18%, rgba(18, 21, 27, .58));
+      border: 1px solid color-mix(in srgb, var(--accent) 55%, var(--rule));
+      box-shadow: 0 0 12px -4px color-mix(in srgb, var(--accent) 55%, transparent);
     }
 
     .resource-icon svg {
       width: 24px;
       height: 24px;
       stroke: currentColor;
-      stroke-width: 1.65;
+      stroke-width: 1.8;
       fill: none;
     }
 
@@ -619,35 +663,6 @@
       100% { offset-distance: 100%; opacity: 0; }
     }
 
-    .stage-floor {
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 100%;
-      height: 140px;
-      z-index: 1;
-      pointer-events: none;
-    }
-
-    .ground-fill {
-      fill: rgba(122, 165, 219, .05);
-      stroke: rgba(122, 165, 219, .22);
-      stroke-width: 1.2;
-      stroke-linejoin: round;
-    }
-
-    .ground-line {
-      fill: none;
-      stroke: rgba(122, 165, 219, .12);
-      stroke-width: 1;
-    }
-
-    .ground-accent {
-      fill: none;
-      stroke: rgba(227, 177, 93, .14);
-      stroke-width: 1;
-    }
-
     .resource-label {
       position: absolute;
       z-index: 2;
@@ -674,6 +689,12 @@
 
     .resource-label:nth-of-type(2n) { animation-delay: -2.6s; }
     .resource-label:nth-of-type(3n) { animation-delay: -5.4s; }
+
+    /* 星空按闭环高亮节拍闪烁 */
+    .resource-label { transition: color .4s var(--ease); }
+    .resource-label::before { transition: background .45s var(--ease), box-shadow .45s var(--ease); }
+    .resource-label.beat { color: rgba(214, 232, 246, .98); }
+    .resource-label.beat::before { background: rgba(180, 206, 240, 1); box-shadow: 0 0 16px rgba(122, 165, 219, .95); }
 
     .loop-trans {
       position: absolute;
@@ -717,8 +738,7 @@
         #14161b;
       box-shadow: none;
       backdrop-filter: none;
-      filter: grayscale(.78) brightness(.66);
-      transition: transform .45s var(--ease-out), border-color .4s var(--ease), box-shadow .4s var(--ease), background .4s var(--ease), filter .45s var(--ease);
+      transition: border-color .4s var(--ease), box-shadow .4s var(--ease), background .4s var(--ease);
     }
 
     .step-node::after {
@@ -958,36 +978,37 @@
       white-space: nowrap;
     }
 
-    .scheme-switch {
+    /* 进化 slogan：3D 场景下方，带框，默认压暗，迭代优化定格时亮起 3s */
+    .floor-tag {
       position: absolute;
-      z-index: 9;
-      top: 14px;
-      right: 16px;
-      display: flex;
-      gap: 2px;
-      padding: 2px;
-      background: var(--paper-warm);
-      border: 1px solid var(--rule);
-      border-radius: 2px;
-      pointer-events: auto;
+      left: 50%;
+      bottom: 22px;
+      transform: translateX(-50%);
+      z-index: 6;
+      padding: 16px 52px;
+      border: 1px solid color-mix(in srgb, var(--vermilion) 30%, var(--rule));
+      border-radius: 4px;
+      background: rgba(26, 30, 38, .82);
+      opacity: .3;
+      transition: opacity .5s var(--ease), box-shadow .5s var(--ease), border-color .5s var(--ease);
+      pointer-events: none;
     }
 
-    .scheme-switch button {
-      font-family: var(--font-mono);
-      font-size: var(--fs-10);
-      font-weight: 500;
-      letter-spacing: .06em;
-      color: var(--ink-mute);
-      background: transparent;
-      border: none;
-      padding: 4px 12px;
-      border-radius: 2px;
-      cursor: pointer;
-      transition: color .2s var(--ease), background .2s var(--ease);
+    .floor-tag.lit {
+      opacity: 1;
+      border-color: color-mix(in srgb, var(--vermilion) 62%, transparent);
+      box-shadow: 0 0 46px -4px color-mix(in srgb, var(--vermilion) 55%, transparent), inset 0 1px 0 rgba(255, 255, 255, .06);
     }
 
-    .scheme-switch button:hover { color: var(--ink-soft); }
-    .scheme-switch button.on { background: var(--vermilion-bg); color: var(--vermilion); }
+    .floor-tag-title {
+      color: var(--ink);
+      font-family: var(--font-title);
+      font-size: var(--fs-24);
+      font-weight: 600;
+      letter-spacing: 2px;
+      white-space: nowrap;
+      text-shadow: 0 0 16px color-mix(in srgb, var(--vermilion) 32%, transparent);
+    }
 
     .core-flywheel {
       position: absolute;
@@ -1070,40 +1091,6 @@
       font-family: var(--font-mono);
       font-size: 12px;
       letter-spacing: 1px;
-    }
-
-    .floor-tag {
-      position: absolute;
-      left: 50%;
-      bottom: 36px;
-      transform: translateX(-50%);
-      z-index: 5;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      padding: 17px 40px;
-      border-radius: 4px;
-      background: rgba(26, 30, 38, .82);
-      box-shadow: 0 0 28px -6px color-mix(in srgb, var(--vermilion) 38%, transparent), inset 0 1px 0 rgba(255, 255, 255, .05);
-      pointer-events: none;
-    }
-
-    .floor-tag-title {
-      color: var(--ink);
-      font-family: var(--font-title);
-      font-size: var(--fs-20);
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-shadow: 0 0 14px color-mix(in srgb, var(--vermilion) 30%, transparent);
-    }
-
-    .floor-tag-sub {
-      color: var(--ink-soft);
-      font-family: var(--font-mono);
-      font-size: 13px;
-      letter-spacing: 2px;
-      white-space: nowrap;
     }
 
     .right-panel {
@@ -1671,8 +1658,8 @@
     /* ===== 跨模块联动脉冲 ===== */
     .resource-item { transition: background .4s var(--ease); }
     .resource-icon { transition: box-shadow .4s var(--ease), border-color .4s var(--ease); }
-    .resource-item.link-on { background: color-mix(in srgb, var(--accent) 13%, transparent); }
-    .resource-item.link-on .resource-icon { border-color: var(--accent); box-shadow: 0 0 14px -2px color-mix(in srgb, var(--accent) 55%, transparent); }
+    .resource-item:hover { background: color-mix(in srgb, var(--accent) 13%, transparent); }
+    .resource-item:hover .resource-icon { border-color: var(--accent); box-shadow: 0 0 14px -2px color-mix(in srgb, var(--accent) 55%, transparent); }
     .load-card { transition: border-color .4s var(--ease), box-shadow .4s var(--ease); }
     .load-card.link-on { border-color: var(--vermilion); box-shadow: 0 0 20px -4px color-mix(in srgb, var(--vermilion) 55%, transparent); }
     .task-item { transition: border-color .4s var(--ease), box-shadow .4s var(--ease); }
@@ -1689,18 +1676,18 @@
   </style>
 </head>
 <body>
-  <main class="viewport" aria-label="智能科研基座平台大屏">
+  <main class="viewport" aria-label="科学智能基座平台大屏">
     <div class="screen" id="screen">
       <header class="topbar">
         <div class="logo-block">
-          <div class="logo-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="9" ry="3.2" transform="rotate(45 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.2" transform="rotate(-45 12 12)"/><circle cx="12" cy="12" r="2.1"/></svg></div>
+          <img class="logo-mark" src="./pujiang-mark.svg" alt="浦江国家实验室标识" />
           <div class="logo-text">
-            <b>浦江实验室</b>
+            <b>浦江国家实验室</b>
           </div>
         </div>
 
         <div class="hero-title">
-          <h1>智能科研基座平台</h1>
+          <h1>科学智能基座平台</h1>
           <p><span>中心化编排</span><span>分布式协同</span><span>纵向做深做厚</span><span>横向应接尽接</span></p>
         </div>
 
@@ -1714,37 +1701,42 @@
 
       <section class="layout">
         <aside class="resource-panel" aria-label="外部资源连接情况">
-          <div class="panel-title"><span>外部资源连接情况</span></div>
-          <div class="resource-list">
+          <section class="resource-map" aria-label="资源连接地图">
+            <div class="panel-title"><span>资源连接地图</span><span class="map-meta">7 类资源 · 实时接入</span></div>
+            <div class="map-canvas"><div id="resourceMap" class="map-chart"></div></div>
+          </section>
+          <section class="resource-connect" aria-label="外部资源连接情况">
+            <div class="panel-title"><span>外部资源连接情况</span></div>
+            <div class="resource-list">
             <div class="resource-item" style="--accent: #7aa5db;">
               <div class="resource-icon"><svg viewBox="0 0 24 24"><path d="M4 7c0-2 16-2 16 0v10c0 2-16 2-16 0Z"/><path d="M4 7c0 2 16 2 16 0M4 12c0 2 16 2 16 0"/></svg></div>
-              <div class="resource-meta"><span class="resource-name">科学数据</span><span class="resource-sub">DATASETS</span></div><div class="resource-main"><span class="resource-value">1000</span><span class="resource-unit">PB</span></div>
+              <div class="resource-meta"><span class="resource-name">科学数据</span><span class="resource-sub">DATASETS</span></div><div class="resource-main"><span class="resource-value">51.6</span><span class="resource-unit">PB</span></div>
             </div>
             <div class="resource-item" style="--accent: #a4b870;">
               <div class="resource-icon"><svg viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><path d="M8 8h8v8H8Z"/><path d="M5 5l3 3M19 5l-3 3M5 19l3-3M19 19l-3-3"/></svg></div>
-              <div class="resource-meta"><span class="resource-name">智算算力</span><span class="resource-sub">AI COMPUTE</span></div><div class="resource-main"><span class="resource-value">50000</span><span class="resource-unit">P</span></div>
+              <div class="resource-meta"><span class="resource-name">智算算力</span><span class="resource-sub">AI COMPUTE</span></div><div class="resource-main"><span class="resource-value">34600</span><span class="resource-unit">P</span></div>
             </div>
             <div class="resource-item" style="--accent: #d4ad6a;">
               <div class="resource-icon"><svg viewBox="0 0 24 24"><path d="M9 3v6l-5 9a2 2 0 0 0 1.8 3h12.4A2 2 0 0 0 20 18l-5-9V3"/><path d="M8 3h8M7 15h10"/></svg></div>
-              <div class="resource-meta"><span class="resource-name">超算算力</span><span class="resource-sub">HPC</span></div><div class="resource-main"><span class="resource-value">1000</span><span class="resource-unit">P</span></div>
+              <div class="resource-meta"><span class="resource-name">超算算力</span><span class="resource-sub">HPC</span></div><div class="resource-main"><span class="resource-value">3600</span><span class="resource-unit">P</span></div>
             </div>
             <div class="resource-item" style="--accent: #a0c2e8;">
               <div class="resource-icon"><svg viewBox="0 0 24 24"><path d="M12 3 4 8v8l8 5 8-5V8Z"/><path d="M12 3v18M4 8l8 5 8-5"/></svg></div>
-              <div class="resource-meta"><span class="resource-name">科学模型</span><span class="resource-sub">MODELS</span></div><div class="resource-main"><span class="resource-value">100</span><span class="resource-unit">个</span></div>
+              <div class="resource-meta"><span class="resource-name">科学模型</span><span class="resource-sub">MODELS</span></div><div class="resource-main"><span class="resource-value">50</span><span class="resource-unit">个</span></div>
             </div>
             <div class="resource-item" style="--accent: #859554;">
               <div class="resource-icon"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><circle cx="16" cy="16" r="3"/><path d="M10.2 10.2l3.6 3.6"/><path d="M16 5v3M16 8h3M5 16h3M8 16v3"/></svg></div>
-              <div class="resource-meta"><span class="resource-name">科学工具</span><span class="resource-sub">TOOLS</span></div><div class="resource-main"><span class="resource-value">100</span><span class="resource-unit">个</span></div>
+              <div class="resource-meta"><span class="resource-name">科学工具</span><span class="resource-sub">TOOLS</span></div><div class="resource-main"><span class="resource-value">200</span><span class="resource-unit">个</span></div>
             </div>
             <div class="resource-item" style="--accent: #b89253;">
               <div class="resource-icon"><svg viewBox="0 0 24 24"><path d="M7 12h10M12 7v10"/><rect x="4" y="9" width="5" height="6" rx="2"/><rect x="15" y="4" width="5" height="6" rx="2"/><rect x="15" y="14" width="5" height="6" rx="2"/></svg></div>
               <div class="resource-meta"><span class="resource-name">AI4S 平台</span><span class="resource-sub">PLATFORMS</span></div><div class="resource-main"><span class="resource-value">5</span><span class="resource-unit">个</span></div>
             </div>
             <div class="resource-item" style="--accent: #5b88c2;">
-              <div class="resource-icon"><svg viewBox="0 0 24 24"><path d="M9 3v6l-5 9a2 2 0 0 0 1.8 3h12.4A2 2 0 0 0 20 18l-5-9V3"/><path d="M8 3h8M7 15h10"/></svg></div>
+              <div class="resource-icon"><svg viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="12" rx="1.5"/><path d="M12 8V4.6"/><circle cx="12" cy="3.4" r="1.3"/><circle cx="9" cy="13" r="1.2"/><circle cx="15" cy="13" r="1.2"/><path d="M8 16.5h8M9 20v1.6M15 20v1.6"/></svg></div>
               <div class="resource-meta"><span class="resource-name">自主实验室</span><span class="resource-sub">AUTONOMOUS LABS</span></div><div class="resource-main"><span class="resource-value">10</span><span class="resource-unit">个</span></div>
             </div>
-          </div>
+          </section>
         </aside>
 
         <section class="center-stage" aria-label="端到端全流程自主科研闭环">
@@ -1756,17 +1748,6 @@
             <span class="domain-tag" style="--bg-map: url('domain-bg/g5.png')"><span class="domain-icon"><svg viewBox="0 0 24 24"><circle cx="6" cy="7" r="2"/><circle cx="18" cy="7" r="2"/><circle cx="12" cy="17" r="2"/><path d="M8 8l3 7M16 8l-3 7M8 7h8"/></svg></span><span>量子科技</span></span>
             <span class="domain-tag" style="--bg-map: url('domain-bg/g6.png')"><span class="domain-icon"><svg viewBox="0 0 24 24"><path d="M7 7h10v10H7Z"/><path d="M4 9h3M4 15h3M17 9h3M17 15h3M9 4v3M15 4v3M9 17v3M15 17v3"/></svg></span><span>半导体</span></span>
           </div>
-
-          <svg class="stage-floor" viewBox="0 0 1036 140" preserveAspectRatio="none" aria-hidden="true">
-            <path class="ground-fill" d="M298 0H738L1036 140H0Z"/>
-            <path class="ground-line" d="M166 140L368 0"/>
-            <path class="ground-line" d="M342 140L443 0"/>
-            <path class="ground-line" d="M518 140L518 0"/>
-            <path class="ground-line" d="M684 140L588 0"/>
-            <path class="ground-line" d="M860 140L663 0"/>
-            <path class="ground-line" d="M179 56H857"/>
-            <path class="ground-accent" d="M83 101H953"/>
-          </svg>
 
           <div class="autonomous-loop" id="loop" aria-label="端到端全流程自主科研 · 数据飞轮">
             <svg class="loop-svg" viewBox="0 0 940 800" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
@@ -1788,14 +1769,8 @@
             <div class="ring3d" id="ring3d"></div>
           </div>
 
-          <div class="scheme-switch" id="schemeSwitch3d">
-            <button data-scheme="A" class="on">线框球 A</button>
-            <button data-scheme="B">等高线球 B</button>
-          </div>
-
           <div class="floor-tag" aria-hidden="true">
             <div class="floor-tag-title">科研轨迹数据推动平台进化</div>
-            <div class="floor-tag-sub">每轮问题、假设、方案、参数、实验结果持续沉淀</div>
           </div>
         </section>
 
@@ -1932,17 +1907,19 @@
       };
 
       const steps = [
-        { t: "用户需求", s: "科研问题理解 · 任务输入", c: "var(--blue)",   a: 12,
+        { t: "用户需求", s: "科研问题理解 · 任务输入", c: "var(--blue)",   a: 90,
           icon: '<path d="M5 5h13v9H8l-3 3.5Z"/><path d="M8 8.5h7M8 11.5h4.5"/>' },
-        { t: "科学假设", s: "假设生成 · 文献推理",      c: "var(--green)",  a: -39,
+        { t: "科学假设", s: "假设生成 · 文献推理",      c: "var(--green)",  a: 38.57,
           icon: '<path d="M9.5 18h5M10.5 21h3"/><path d="M12 3a6 6 0 0 1 3.8 10.7c-.7.6-.9 1-.9 2.3H9.1c0-1.3-.2-1.7-.9-2.3A6 6 0 0 1 12 3Z"/>' },
-        { t: "实验方案", s: "方案生成 · 条件优化",      c: "var(--cyan)",   a: -73,
+        { t: "实验方案", s: "方案生成 · 条件优化",      c: "var(--cyan)",   a: -12.86,
           icon: '<path d="M5 4h14v16H5Z"/><path d="M8.5 8.5h7M8.5 12h7M8.5 15.5h4.5"/>' },
-        { t: "干 / 湿实验验证", s: "仿真计算 + 真实实验", c: "var(--gold)", a: -107,
+        { t: "干实验验证", s: "仿真计算 · 建模推演",    c: "var(--gold)",   a: -64.29,
+          icon: '<rect x="3" y="5" width="18" height="12" rx="1"/><path d="M7.5 21h9M12 17v4"/><path d="M6.5 12l2.5-3 2 2 3-4.5"/>' },
+        { t: "湿实验验证", s: "真实实验 · 自主执行",    c: "var(--orange)", a: -115.71,
           icon: '<path d="M9 3v6L4.3 17.2A2 2 0 0 0 6 20.2h12a2 2 0 0 0 1.7-3L15 9V3"/><path d="M8 3h8M7.5 14h9"/>' },
-        { t: "结果分析", s: "结果解析 · 证据沉淀",      c: "var(--teal)",  a: -141,
+        { t: "结果分析", s: "结果解析 · 证据沉淀",      c: "var(--teal)",  a: -167.14,
           icon: '<path d="M4 19V5M4 19h16"/><path d="M7.5 15l3-4 3 2 4-7"/>' },
-        { t: "迭代优化", s: "多轮验证 · 策略优化",      c: "var(--violet)", a: 168,
+        { t: "迭代优化", s: "多轮验证 · 策略优化",      c: "var(--violet)", a: -218.57,
           icon: '<circle cx="12" cy="12" r="6.5"/><circle cx="12" cy="12" r="2"/><path d="M12 5.5v2M18.5 12h-2M12 18.5v-2M5.5 12h2"/>' },
       ];
       const nodeEls = [];
@@ -1965,57 +1942,81 @@
       const resData = [
         { a: 150, t: "国家科学数据中心" },
         { a: 116, t: "磐石大模型" },
+        { a: 88,  t: "书生大模型" },
         { a: 64,  t: "DFT 计算" },
         { a: 28,  t: "国家训练场" },
+        { a: 8,   t: "冷冻电镜" },
+        { a: -8,  t: "分子对接" },
         { a: -28, t: "爱赛思" },
+        { a: -48, t: "第一性原理" },
         { a: -68, t: "中科大化学家" },
         { a: -108, t: "国家超算中心" },
+        { a: -128, t: "天河超算" },
         { a: -150, t: "星河启智" },
+        { a: 176, t: "中国科技云" },
       ];
-      resData.forEach((r) => {
+      // 外圈资源名：大部分散布在顶部两行，另取 4 个填到底部左右两角（星空，不随节点旋转）
+      resData.forEach((r, k) => {
         const el = document.createElement("span");
         el.className = "resource-label";
-        el.dataset.ang = r.a;
         el.dataset.outer = "1";
         el.textContent = r.t;
+        let x, y;
+        if (k < 10) {                                       // 顶部两行
+          const col = k % 5;
+          const row = Math.floor(k / 5);
+          x = 70 + col * 190 + (((k * 23) % 46) - 23);
+          y = 24 + row * 60 + ((k * 29) % 34);
+        } else {                                            // 底部左右角
+          const j = k - 10;                                 // 0~3
+          const right = j >= 2;
+          const s = j % 2;
+          x = right ? (720 + s * 130) : (60 + s * 120);
+          y = 718 + s * 46;
+        }
+        el.style.left = x + "px";
+        el.style.top = y + "px";
         loop.appendChild(el);
       });
 
-      // ===== 接力点亮：节点逐个亮起 + 跨模块联动脉冲 =====
+      // ===== 高亮控制：由中央 3D 动画驱动（节点转到最前端即点亮）=====
       const N = steps.length;
-      let active = 0;
-      const resItems = [...document.querySelectorAll(".resource-item")];
       const loadCards = [...document.querySelectorAll(".load-card")];
       const taskItems = [...document.querySelectorAll(".task-item")];
-      // 每个环节联动的资源/算力/任务（按当前环节"点亮谁、谁就响"）
+      const ambLabels = [...document.querySelectorAll(".resource-label")];
+      // 每个环节联动的算力/任务（当前环节转到最前端时触发脉冲）
       const LINK = [
-        { res: [0],    load: [],     task: [] },     // 用户需求 → 科学数据
-        { res: [3],    load: [0],    task: [] },     // 科学假设 → 科学模型 · 智算
-        { res: [4],    load: [0, 1], task: [1] },    // 实验方案 → 科学工具 · 算力 · 电催化
-        { res: [6],    load: [0, 1], task: [0, 1] }, // 干/湿验证 → 自主实验室 · 算力 · 两任务
-        { res: [0, 1], load: [0],    task: [0] },     // 结果分析 → 数据 · 智算 · 蛋白质
-        { res: [5],    load: [],     task: [] },     // 迭代优化 → AI4S 平台
+        { load: [],     task: [] },     // 用户需求
+        { load: [0],    task: [] },     // 科学假设 · 智算
+        { load: [0, 1], task: [1] },    // 实验方案 · 算力 · 电催化
+        { load: [0, 1], task: [1] },    // 干实验验证 · 算力 · 电催化
+        { load: [0, 1], task: [0, 1] }, // 湿实验验证 · 算力 · 两任务
+        { load: [0],    task: [0] },    // 结果分析 · 智算 · 蛋白质
+        { load: [],     task: [] },     // 迭代优化
       ];
       const pulse = (el) => { if (!el) return; el.classList.add("link-on"); setTimeout(() => el.classList.remove("link-on"), 1300); };
-      function relayTick() {
+      // 暴露给 3D 动画：点亮第 idx 个节点 + 入边弧线/转化文字 + 联动脉冲 + 星空按拍闪烁
+      window.__loopSetActive = function (idx) {
         nodeEls.forEach((n) => n.classList.remove("is-active"));
-        if (nodeEls[active]) nodeEls[active].classList.add("is-active");
-        // 入边弧线 + 转化文字同步点亮（arc[prev] 连接 prev→当前节点）
+        if (nodeEls[idx]) nodeEls[idx].classList.add("is-active");
         const arcs = document.querySelectorAll(".conn-line[data-arc]");
         const transs = document.querySelectorAll(".loop-trans[data-arc]");
         arcs.forEach((a) => a.classList.remove("is-active"));
         transs.forEach((t) => t.classList.remove("is-flow"));
-        const prev = (active - 1 + N) % N;
+        const prev = (idx - 1 + N) % N;
         if (arcs[prev]) arcs[prev].classList.add("is-active");
         if (transs[prev]) transs[prev].classList.add("is-flow");
-        const lk = LINK[active] || {};
-        (lk.res || []).forEach((i) => pulse(resItems[i]));
+        const lk = LINK[idx] || {};
         (lk.load || []).forEach((i) => pulse(loadCards[i]));
         (lk.task || []).forEach((i) => pulse(taskItems[i]));
-        active = (active + 1) % N;
-      }
-      relayTick();
-      setInterval(relayTick, 2600);
+        ambLabels.forEach((s) => { s.classList.add("beat"); setTimeout(() => s.classList.remove("beat"), 520); });
+      };
+      // 进化阶段调用：清除所有节点/弧线/转化文字高亮
+      window.__loopClear = function () {
+        nodeEls.forEach((n) => n.classList.remove("is-active"));
+        document.querySelectorAll(".conn-line[data-arc]").forEach((a) => a.classList.remove("is-active"));
+        document.querySelectorAll(".loop-trans[data-arc]").forEach((t) => t.classList.remove("is-flow"));
+      };
     })();
 
     /* ===== 平台运行情况：算力负载节点阵列（点亮比例=负载，随机 flash 模拟活动）===== */
@@ -2200,7 +2201,7 @@
         new THREE.LineBasicMaterial({ color:C.ruleSoft, transparent:true, opacity:.32 }))); }
 
     // ===== core orb · scheme A · 灵动球体 =====
-    const ORB = 5.0, ORB_Y = ORB + 1.3;
+    const ORB = 5.0, ORB_Y = 0;   // 球心落在地面 y=0，赤道正好与地面/涟漪重合
     const orbGroupA = new THREE.Group(); orbGroupA.position.set(0, ORB_Y, 0); group.add(orbGroupA);
     const orbLon = new LineMaterial({ color:C.v6, linewidth:1.5, transparent:true, opacity:.6 });
     const orbLat = new LineMaterial({ color:C.v5, linewidth:1.3, transparent:true, opacity:.45 });
@@ -2267,123 +2268,6 @@
       transparent:true, opacity:.7, depthWrite:false, blending:THREE.AdditiveBlending, sizeAttenuation:true }));
     orbGroupA.add(particles);
 
-    // ===== scheme B · 等高线球 =====
-    const orbGroupB = new THREE.Group(); orbGroupB.position.set(0, ORB_Y, 0);
-    orbGroupB.visible = false; group.add(orbGroupB);
-    const hex2vec = h => new THREE.Color(h);
-    const contourMat = new THREE.ShaderMaterial({
-      uniforms:{ uTime:{ value:0 }, uBase:{ value:hex2vec(0x0b0f16) }, uLine:{ value:hex2vec(0x7aa5db) },
-        uLine2:{ value:hex2vec(0x4d6f9e) }, uRim:{ value:hex2vec(0xa0c2e8) } },
-      vertexShader:`
-        varying vec3 vDir; varying vec3 vN; varying vec3 vView;
-        void main(){ vDir = normalize(position); vN = normalize(normalMatrix * normal);
-          vec4 mv = modelViewMatrix * vec4(position,1.0); vView = normalize(-mv.xyz);
-          gl_Position = projectionMatrix * mv; }`,
-      fragmentShader:`
-        precision highp float;
-        varying vec3 vDir; varying vec3 vN; varying vec3 vView;
-        uniform float uTime; uniform vec3 uBase,uLine,uLine2,uRim;
-        void main(){
-          vec3 d = normalize(vDir);
-          float t = uTime*0.12;
-          vec3 pH = normalize(vec3(sin(t)*0.7, 0.45, cos(t)));
-          vec3 pL = normalize(vec3(cos(t*0.8)*-0.8, -0.35, sin(t*0.8)*0.7));
-          float f = 0.0;
-          f += exp(2.6*(dot(d,pH)-1.0));
-          f -= exp(2.6*(dot(d,pL)-1.0));
-          f += 0.16*sin(d.x*3.2 + t)*cos(d.y*3.0 - t*0.7);
-          f += 0.09*sin(d.z*5.0 + t*1.2);
-          float scale = 6.0;
-          float g = f*scale;
-          float aa = max(fwidth(g), 1e-4);
-          float dist = abs(fract(g)-0.5);
-          float line = 1.0 - smoothstep(0.0, aa*1.3, dist);
-          float g2 = g + 0.5;
-          float dist2 = abs(fract(g2)-0.5);
-          float lineB = 1.0 - smoothstep(0.0, aa*1.3, dist2);
-          float dots = step(0.45, fract(g2*9.0));
-          lineB *= dots;
-          float flow = 0.5 + 0.5*sin(f*7.0 - uTime*1.1);
-          vec3 lineCol = mix(uLine, uRim, flow);
-          float lineI = line * (0.5 + 0.45*flow);
-          vec3 col = uBase;
-          col = mix(col, uLine2, lineB*0.20*(0.55 + 0.45*flow));
-          col = mix(col, lineCol, lineI);
-          float fres = pow(1.0 - max(dot(vN, vView), 0.0), 2.5);
-          col += uRim * fres * 0.22;
-          gl_FragColor = vec4(col, 1.0);
-        }`
-    });
-    const contourSphere = new THREE.Mesh(new THREE.SphereGeometry(ORB, 110, 80), contourMat);
-    orbGroupB.add(contourSphere);
-    const haloMat = new THREE.ShaderMaterial({
-      uniforms:{ uColor:{ value:hex2vec(0x7aa5db) }, uTime:{ value:0 } },
-      transparent:true, blending:THREE.AdditiveBlending, side:THREE.BackSide, depthWrite:false,
-      vertexShader:`
-        varying vec3 vN; varying vec3 vView;
-        void main(){ vN=normalize(normalMatrix*normal);
-          vec4 mv=modelViewMatrix*vec4(position,1.0); vView=normalize(-mv.xyz);
-          gl_Position=projectionMatrix*mv; }`,
-      fragmentShader:`
-        varying vec3 vN; varying vec3 vView; uniform vec3 uColor; uniform float uTime;
-        void main(){ float i=pow(1.0-abs(dot(vN,vView)),3.4);
-          float pulse=0.82+0.18*sin(uTime*1.2);
-          gl_FragColor=vec4(uColor, i*0.5*pulse); }`
-    });
-    const halo = new THREE.Mesh(new THREE.SphereGeometry(ORB*1.16, 64, 48), haloMat);
-    halo.renderOrder = 1; orbGroupB.add(halo);
-    const FLOW_N = 9;
-    const flowGroup = new THREE.Group(); orbGroupB.add(flowGroup);
-    const flowers = [];
-    for(let i=0;i<FLOW_N;i++){
-      const m = new THREE.Mesh(new THREE.SphereGeometry(0.05 + Math.random()*0.045, 12, 12),
-        new THREE.MeshBasicMaterial({ color:C.v7, transparent:true, opacity:0, depthTest:false, depthWrite:false }));
-      m.renderOrder=4; flowGroup.add(m);
-      const u=Math.random()*2-1, th=Math.random()*Math.PI*2, s=Math.sqrt(1-u*u);
-      flowers.push({ m, d:new THREE.Vector3(s*Math.cos(th), u, s*Math.sin(th)),
-        sp:0.18 + Math.random()*0.22, rr:1.008 + Math.random()*0.012 });
-    }
-    const _pH=new THREE.Vector3(), _pL=new THREE.Vector3(), _g=new THREE.Vector3(), _tg=new THREE.Vector3();
-    const _n=new THREE.Vector3(), _w=new THREE.Vector3(), _Y=new THREE.Vector3(0,1,0);
-    function flowField(x,y,z,t){
-      const dh=x*_pH.x+y*_pH.y+z*_pH.z, dl=x*_pL.x+y*_pL.y+z*_pL.z;
-      return Math.exp(2.6*(dh-1)) - Math.exp(2.6*(dl-1))
-        + 0.16*Math.sin(x*3.2+t)*Math.cos(y*3.0-t*0.7) + 0.09*Math.sin(z*5.0+t*1.2);
-    }
-    function updateFlow(dt){
-      const t = tEl*0.12, e=0.003, scale=6.0, ry=orbGroupB.rotation.y;
-      _pH.set(Math.sin(t)*0.7, 0.45, Math.cos(t)).normalize();
-      _pL.set(Math.cos(t*0.8)*-0.8, -0.35, Math.sin(t*0.8)*0.7).normalize();
-      flowers.forEach(p=>{
-        const d=p.d;
-        const f0=flowField(d.x,d.y,d.z,t);
-        _g.set(
-          flowField(d.x+e,d.y,d.z,t)-flowField(d.x-e,d.y,d.z,t),
-          flowField(d.x,d.y+e,d.z,t)-flowField(d.x,d.y-e,d.z,t),
-          flowField(d.x,d.y,d.z+e,t)-flowField(d.x,d.y,d.z-e,t)).multiplyScalar(1/(2*e));
-        _g.addScaledVector(d, -_g.dot(d));
-        const gLen2=_g.lengthSq();
-        _tg.crossVectors(d, _g);
-        if(_tg.lengthSq()<1e-9) _tg.set(-d.z,0,d.x);
-        _tg.normalize();
-        d.addScaledVector(_tg, p.sp*dt);
-        if(gLen2>1e-6){ const g=f0*scale, err=g-(Math.round(g-0.5)+0.5);
-          d.addScaledVector(_g, -(err/scale)/gLen2*0.6); }
-        d.normalize();
-        p.m.position.copy(d).multiplyScalar(ORB*p.rr);
-        _n.copy(d).applyAxisAngle(_Y, ry);
-        _w.set(0,ORB_Y,0).addScaledVector(_n, ORB*p.rr);
-        _w.subVectors(camera.position, _w).normalize();
-        const facing=_n.dot(_w);
-        p.m.material.opacity = Math.max(0, Math.min(1,(facing-0.12)/0.45))*0.9;
-      });
-    }
-
-    // hover stem
-    group.add(new THREE.Line(
-      new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,0), new THREE.Vector3(0,ORB_Y-ORB,0)]),
-      new THREE.LineBasicMaterial({ color:C.ruleSoft, transparent:true, opacity:.5 })));
-
     // ground ripples
     const RIP_N = 4, RIP_MIN = ORB*0.5, RIP_MAX = R, RIP_T = 3.4;
     const ripPts = []; for(let i=0;i<=80;i++){ const a=i/80*Math.PI*2; ripPts.push(new THREE.Vector3(Math.cos(a),0,Math.sin(a))); }
@@ -2394,7 +2278,7 @@
       return { L, mat, off:k/RIP_N };
     });
 
-    // hub label
+    // hub label（端到端自主科研闭环）
     const hubEl = document.createElement('div'); hubEl.className='hub3d';
     hubEl.innerHTML = `<div class="h-title">端到端自主科研闭环</div>`;
     scene.add(mkLabel(hubEl, 0, -1.8, 0));
@@ -2418,14 +2302,8 @@
 
     const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
 
-    // A/B scheme toggle
-    const schemeBtns = [...document.querySelectorAll('#schemeSwitch3d button')];
-    function setScheme(s){
-      orbGroupA.visible = s==='A'; orbGroupB.visible = s==='B';
-      schemeBtns.forEach(b=>b.classList.toggle('on', b.dataset.scheme===s));
-    }
-    schemeBtns.forEach(b=> b.addEventListener('click', ()=> setScheme(b.dataset.scheme)));
-    setScheme('A');
+    // 固定方案 A（线框球）
+    orbGroupA.visible = true;
 
     // ---- 把 2D 卡片/标签按同一相机投影钉到 3D 环上（统一透视）----
     const TOP_OFFSET = -28;            // ring3d 相对 #loop 的 top 偏移
@@ -2442,7 +2320,7 @@
     const loopEl3d = document.getElementById('loop');
     const arcLayer3d = document.getElementById('arcLayer');
     const Nn = nodeCards.length;
-    const TRANS = ["提出", "生成与筛选", "实验编排", "结果反馈", "证据回流", "迭代优化"];
+    const TRANS = ["提出", "生成与筛选", "实验编排", "实验执行", "结果反馈", "证据回流", "迭代优化"];
     const arcEls3 = [], transEls3 = [];
     try {
       if (arcLayer3d && Nn) {
@@ -2458,15 +2336,45 @@
         }
       }
     } catch (e) { /* 弧线创建失败不影响中央 3D */ }
+    // ===== 闭环节点旋转动画状态 =====
+    let spinDeg = 0, orbYaw = 0, curFront = -1, holding = false, holdT = 0, heldThisCycle = false;
+    const NSTEP = nodeCards.length;          // 7
+    const SLOT = 360 / NSTEP;                // 51.43°/节点
+    const FRONT = -90;                       // 屏幕角：地面最前端（最靠近观察者）
+    const SPIN_FAST = 15;                    // deg/s 迭代速度（~20s 到迭代优化）
+    const HOLD_TIME = 3;                     // 迭代优化在最前端时定格秒数（slogan 同步亮起）
+    const baseAng = (i) => FRONT + i * SLOT; // 节点 i 在 spinDeg=i*SLOT 时转到最前端
+    const nodeAng = (i) => baseAng(i) - spinDeg;
+    const floorTagEl = document.querySelector('.floor-tag');
+    let floorTimer = null;
+    function lightFloorTag(){
+      if (!floorTagEl) return;
+      floorTagEl.classList.add('lit');
+      clearTimeout(floorTimer);
+      floorTimer = setTimeout(() => floorTagEl.classList.remove('lit'), 3000);
+    }
     function layout(){
-      nodeCards.forEach(el=>{ const p=proj(parseFloat(el.dataset.ang), R, 0.6);
-        el.style.left=p[0].toFixed(1)+'px'; el.style.top=p[1].toFixed(1)+'px'; });
-      ambCards.forEach(el=>{ const p=proj(parseFloat(el.dataset.ang), R*1.32, 0.4);
-        el.style.left=p[0].toFixed(1)+'px'; el.style.top=p[1].toFixed(1)+'px'; });
+      nodeCards.forEach((el, i) => {
+        const ang = nodeAng(i);
+        const p = proj(ang, R, 0.6);
+        el.style.left = p[0].toFixed(1) + 'px';
+        el.style.top  = p[1].toFixed(1) + 'px';
+        // 深度：near=1 最前端(最大最亮) → near=-1 最后端(更小更暗，但仍可见，不模糊)
+        const near = Math.sin(-ang * Math.PI / 180);
+        const t = (near + 1) / 2;
+        let scale = 0.62 + 0.5 * t;
+        if (i === curFront) scale *= 1.06;
+        const opacity = 0.42 + 0.58 * t;      // 最后端保留 0.42，确保可见
+        const bright = 0.5 + 0.5 * t;         // 越靠后越暗
+        el.style.transform = 'translate(-50%,-50%) scale(' + scale.toFixed(3) + ')';
+        el.style.opacity = opacity.toFixed(2);
+        el.style.filter = 'brightness(' + bright.toFixed(2) + ')';
+        el.style.zIndex = Math.round((near + 1) * 50) + (i === curFront ? 60 : 0);
+      });
       try {
         for (let i = 0; i < arcEls3.length; i++) {
-          const a0 = parseFloat(nodeCards[i].dataset.ang);
-          const a1 = parseFloat(nodeCards[(i + 1) % Nn].dataset.ang);
+          const a0 = nodeAng(i);
+          const a1 = nodeAng((i + 1) % NSTEP);
           let dlt = ((a1 - a0 + 180) % 360 + 360) % 360 - 180;   // 取短弧
           let d = '';
           for (let k = 0; k <= 16; k++) { const p = proj(a0 + dlt * (k / 16), R, 0.6); d += (k ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1); }
@@ -2479,31 +2387,133 @@
       } catch (e) { /* 弧线更新失败不影响节点定位 */ }
     }
 
-    const clock = new THREE.Clock(); let phase=0, tEl=0;
+    const clock = new THREE.Clock(); let tEl = 0;
+    // 迭代旋转：依次转到最前端点亮；迭代优化到最前端时定格 3s（slogan 亮起），再无缝循环迭代
+    function stepLoop(dt){
+      if (holding) {                                   // 定格：节点与球体都停 3s
+        holdT += dt;
+        if (holdT >= HOLD_TIME) holding = false;
+      } else {
+        spinDeg += SPIN_FAST * dt;
+        orbYaw -= SPIN_FAST * Math.PI / 180 * dt;      // 球体同速顺时针
+        if (!heldThisCycle && spinDeg >= 6 * SLOT) {   // 迭代优化到最前端 → 定格 + slogan 亮起
+          spinDeg = 6 * SLOT; holding = true; holdT = 0; heldThisCycle = true;
+          lightFloorTag();
+        }
+        if (spinDeg >= 7 * SLOT) { spinDeg -= 7 * SLOT; heldThisCycle = false; }  // 无缝回环
+      }
+      // 最前端节点检测 → 点亮 + 星空按拍闪烁（定格时保持迭代优化高亮）
+      let best = 0, bestd = 1e9;
+      for (let i = 0; i < NSTEP; i++) {
+        const d = Math.abs(((nodeAng(i) - FRONT + 180) % 360 + 360) % 360 - 180);
+        if (d < bestd) { bestd = d; best = i; }
+      }
+      if (best !== curFront) { curFront = best; if (window.__loopSetActive) window.__loopSetActive(best); }
+    }
     function frame(){
       requestAnimationFrame(frame);
       const dt = Math.min(clock.getDelta(), .05);
       if(!reduce){
-        phase += dt*(Math.PI*2)/(segN*2.6); if(phase>=Math.PI*2) phase-=Math.PI*2; tEl += dt;
-        orbGroupA.rotation.y = tEl*0.18;
+        tEl += dt;
+        stepLoop(dt);
+        orbGroupA.rotation.y = orbYaw;
         orbGroupA.scale.setScalar(1 + 0.03*Math.sin(tEl*1.1));
         particles.rotation.y = -tEl*0.45;
-        orbGroupB.rotation.y = tEl*0.14;
-        contourMat.uniforms.uTime.value = tEl;
-        haloMat.uniforms.uTime.value = tEl;
-        if(orbGroupB.visible) updateFlow(dt);
         coreGroup.rotation.y = -tEl*0.5; coreGroup.rotation.x = Math.sin(tEl*0.3)*0.4;
         innerRings.forEach(r=>{ r.L.rotation.y = tEl*r.sp; });
         innerParts.forEach(p=>{ const a=tEl*p.sp+p.off, yb=p.r*Math.sin(a);
           p.m.position.set(p.r*Math.cos(a), yb*Math.cos(p.tilt), yb*Math.sin(p.tilt)); });
         ripples.forEach(rp=>{ const t=(tEl/RIP_T+rp.off)%1, rad=RIP_MIN+(RIP_MAX-RIP_MIN)*t;
           rp.L.scale.set(rad,1,rad); rp.mat.opacity = .5*(1-t)*(1-t); });
+      } else if (curFront < 0) {                       // 减动效：静态点亮首个节点
+        curFront = 0; if (window.__loopSetActive) window.__loopSetActive(0);
       }
       layout();
       renderer.render(scene, camera); labelRenderer.render(scene, camera);
     }
     frame();
   }
+  </script>
+
+  <script src="./vendor/echarts/echarts.min.js"></script>
+  <script src="./vendor/echarts/china-geo.js"></script>
+  <script>
+  /* ===== 左栏 · 资源连接地图（ECharts 中国地图 · 脉冲点 + 飞线，参考 cluster-map）===== */
+  (function initResourceMap(){
+    const el = document.getElementById('resourceMap');
+    if (!el || typeof echarts === 'undefined') return;
+
+    const LINE_COLOR = '#a0c2e8';
+    const HUB = [114.30, 30.60];              // 平台汇聚点（居中）
+    // 7 类资源：coord 分散全国避免拥挤，color/glyph 与左栏列表一一对应
+    const RES = [
+      { coord: [116.40, 39.90], color: '#7aa5db', glyph: "<path d='M4 7c0-2 16-2 16 0v10c0 2-16 2-16 0Z'/><path d='M4 7c0 2 16 2 16 0M4 12c0 2 16 2 16 0'/>" },                                                   // 科学数据 · 北京
+      { coord: [121.47, 31.23], color: '#a4b870', glyph: "<path d='M12 3v4M12 17v4M3 12h4M17 12h4'/><path d='M8 8h8v8H8Z'/><path d='M5 5l3 3M19 5l-3 3M5 19l3-3M19 19l-3-3'/>" },                                        // 智算算力 · 上海
+      { coord: [113.26, 23.13], color: '#d4ad6a', glyph: "<path d='M9 3v6l-5 9a2 2 0 0 0 1.8 3h12.4A2 2 0 0 0 20 18l-5-9V3'/><path d='M8 3h8M7 15h10'/>" },                                                            // 超算算力 · 广州
+      { coord: [104.07, 30.67], color: '#a0c2e8', glyph: "<path d='M12 3 4 8v8l8 5 8-5V8Z'/><path d='M12 3v18M4 8l8 5 8-5'/>" },                                                                                       // 科学模型 · 成都
+      { coord: [108.95, 34.27], color: '#859554', glyph: "<circle cx='8' cy='8' r='3'/><circle cx='16' cy='16' r='3'/><path d='M10.2 10.2l3.6 3.6'/><path d='M16 5v3M16 8h3M5 16h3M8 16v3'/>" },                       // 科学工具 · 西安
+      { coord: [126.60, 45.75], color: '#b89253', glyph: "<path d='M7 12h10M12 7v10'/><rect x='4' y='9' width='5' height='6' rx='2'/><rect x='15' y='4' width='5' height='6' rx='2'/><rect x='15' y='14' width='5' height='6' rx='2'/>" }, // AI4S 平台 · 哈尔滨
+      { coord: [102.70, 25.04], color: '#5b88c2', glyph: "<rect x='4' y='8' width='16' height='12' rx='1.5'/><path d='M12 8V4.6'/><circle cx='12' cy='3.4' r='1.3'/><circle cx='9' cy='13' r='1.2'/><circle cx='15' cy='13' r='1.2'/><path d='M8 16.5h8M9 20v1.6M15 20v1.6'/>" }, // 自主实验室 · 昆明
+    ];
+
+    // 把资源图标做成彩色徽标（深色底 + accent 描边 + accent 图标），与列表图标同款
+    function badge(color, glyph){
+      const svg =
+        "<svg xmlns='http://www.w3.org/2000/svg' width='52' height='52' viewBox='0 0 24 24'>" +
+        "<rect x='1.4' y='1.4' width='21.2' height='21.2' rx='4' fill='#0e1118'/>" +
+        "<rect x='1.4' y='1.4' width='21.2' height='21.2' rx='4' fill='" + color + "' fill-opacity='0.22' stroke='" + color + "' stroke-width='1.3'/>" +
+        "<g transform='translate(12 12) scale(0.68) translate(-12 -12)' fill='none' stroke='" + color + "' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'>" + glyph + "</g>" +
+        "</svg>";
+      return 'image://data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+    }
+
+    function buildOption(){
+      return {
+        backgroundColor: 'transparent',
+        geo: {
+          map: 'china', roam: false, silent: true,
+          zoom: 1.28, center: [110, 33],
+          itemStyle: {
+            areaColor: 'rgba(122,165,219,0.04)',
+            borderColor: 'rgba(122,165,219,0.30)',
+            borderWidth: 0.6,
+          },
+          emphasis: { disabled: true },
+          label: { show: false },
+        },
+        animationDuration: 900,
+        animationEasing: 'cubicOut',
+        series: [
+          {
+            name: 'pulse', type: 'effectScatter', coordinateSystem: 'geo', zlevel: 2,
+            showEffectOn: 'render',
+            rippleEffect: { period: 3, brushType: 'stroke', scale: 3.6 },
+            symbolSize: 7, label: { show: false },
+            data: RES.map(r => ({ value: r.coord, itemStyle: { color: r.color, shadowBlur: 6, shadowColor: r.color } })),
+          },
+          {
+            name: 'icons', type: 'scatter', coordinateSystem: 'geo', zlevel: 3,
+            symbolSize: 18, label: { show: false },
+            data: RES.map(r => ({ value: r.coord, symbol: badge(r.color, r.glyph) })),
+          },
+        ],
+      };
+    }
+
+    function render(){
+      echarts.registerMap('china', window.__CHINA_GEO__);
+      const chart = echarts.init(el, null, { renderer: 'canvas' });
+      chart.setOption(buildOption());
+      addEventListener('resize', () => chart.resize());
+      if (typeof ResizeObserver !== 'undefined') new ResizeObserver(() => chart.resize()).observe(el);
+    }
+
+    if (window.__CHINA_GEO__) {
+      requestAnimationFrame(() => requestAnimationFrame(render));
+    } else {
+      el.innerHTML = '<div style="font-size:11px;color:#828892;letter-spacing:.12em;padding:10px;">地图数据未加载</div>';
+    }
+  })();
   </script>
 </body>
 </html>
