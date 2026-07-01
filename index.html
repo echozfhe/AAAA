@@ -1000,7 +1000,7 @@
       white-space: nowrap;
     }
 
-    /* 进化 slogan：3D 场景下方，带框，首次出现后常驻，定格时高亮 */
+    /* 进化 slogan：3D 场景下方，带框，首次出现后常驻高亮，定格时光流动 */
     .floor-tag {
       position: absolute;
       left: 50%;
@@ -1008,53 +1008,99 @@
       transform: translateX(-50%) translateY(12px);
       z-index: 6;
       padding: 16px 52px;
-      border: 1px solid color-mix(in srgb, var(--vermilion) 30%, var(--rule));
+      border: 1px solid transparent;
       border-radius: 4px;
       background: rgba(26, 30, 38, .82);
       opacity: 0;
       pointer-events: none;
-      transition: opacity .45s var(--ease), box-shadow .45s var(--ease), border-color .45s var(--ease), transform .45s var(--ease-out);
+      transition: opacity .45s var(--ease), transform .45s var(--ease-out);
+    }
+
+    .floor-tag::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: 4px;
+      background: color-mix(in srgb, var(--vermilion) 62%, transparent);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      padding: 1px;
+    }
+
+    .floor-tag::after {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: 4px;
+      background: conic-gradient(from var(--flow-angle, 0deg), transparent 0deg, transparent 300deg, var(--vermilion-7) 330deg, #fff 355deg, var(--vermilion-7) 358deg, transparent 360deg);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      padding: 1px;
+      opacity: 0;
+      transition: opacity .3s var(--ease);
     }
 
     .floor-tag.visible {
       opacity: 1;
       transform: translateX(-50%) translateY(0);
-      border-color: color-mix(in srgb, var(--vermilion) 62%, transparent);
       box-shadow: 0 0 46px -4px color-mix(in srgb, var(--vermilion) 55%, transparent), inset 0 1px 0 rgba(255, 255, 255, .06);
     }
 
-    .floor-tag.lit {
+    .floor-tag.lit::after {
       opacity: 1;
-      transform: translateX(-50%) translateY(0);
-      border-color: color-mix(in srgb, var(--vermilion) 62%, transparent);
-      box-shadow: 0 0 46px -4px color-mix(in srgb, var(--vermilion) 55%, transparent), inset 0 1px 0 rgba(255, 255, 255, .06);
+      animation: floorFlow 6s linear forwards;
+    }
+
+    @keyframes floorFlow {
+      from { --flow-angle: 0deg; }
+      to { --flow-angle: 360deg; }
+    }
+
+    @property --flow-angle {
+      syntax: "<angle>";
+      initial-value: 0deg;
+      inherits: false;
     }
 
     .floor-arrow {
       position: absolute;
       left: 50%;
-      bottom: 138px;
-      transform: translateX(-50%) translateY(-4px);
+      bottom: 154px;
+      transform: translateX(-50%);
       z-index: 6;
+      width: 120px;
+      height: 40px;
       opacity: 0;
       pointer-events: none;
-      transition: opacity .35s var(--ease), transform .35s var(--ease-out);
+      transition: opacity .4s var(--ease);
+      overflow: visible;
     }
 
     .floor-arrow.lit {
       opacity: 1;
-      transform: translateX(-50%) translateY(0);
     }
 
-    .floor-arrow svg {
-      width: 36px;
-      height: 28px;
-      fill: none;
-      stroke: var(--vermilion);
-      stroke-width: 2.4;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      filter: drop-shadow(0 2px 8px color-mix(in srgb, var(--vermilion) 60%, transparent));
+    .floor-particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      border-radius: 50%;
+      background: var(--vermilion-7);
+      box-shadow: 0 0 4px var(--vermilion-6);
+      animation: particleFall 1.6s linear infinite;
+      opacity: 0;
+    }
+
+    @keyframes particleFall {
+      0% { transform: translateY(0) translateX(0); opacity: 0; }
+      8% { opacity: .85; }
+      50% { transform: translateY(20px) translateX(var(--px-drift)); }
+      75% { opacity: .65; }
+      100% { transform: translateY(40px) translateX(0); opacity: 0; }
     }
 
     .floor-tag-title {
@@ -1823,9 +1869,32 @@
             <div class="ring3d" id="ring3d"></div>
           </div>
 
-          <div class="floor-arrow" id="floorArrow" aria-hidden="true">
-            <svg viewBox="0 0 36 28"><path d="M4 6l14 16L32 6"/><path d="M4 2l14 16L32 2" opacity=".4"/></svg>
-          </div>
+          <div class="floor-arrow" id="floorArrow" aria-hidden="true"></div>
+          <script>
+          (function(){
+            const fa = document.getElementById('floorArrow');
+            if (!fa) return;
+            for (let i = 0; i < 24; i++) {
+              const p = document.createElement('span');
+              p.className = 'floor-particle';
+              // 上下宽中间窄：根据垂直位置决定水平散布范围
+              const yRatio = Math.random();
+              const narrowFactor = 1 - 0.7 * (1 - Math.pow(2 * yRatio - 1, 2));
+              const xCenter = 50;
+              const xSpread = 42 * narrowFactor;
+              const x = xCenter + (Math.random() - 0.5) * 2 * xSpread;
+              p.style.left = x + '%';
+              p.style.top = (yRatio * 4) + 'px';
+              p.style.setProperty('--px-drift', ((0.5 - narrowFactor) * 20).toFixed(1) + 'px');
+              p.style.animationDelay = (Math.random() * 1.6).toFixed(2) + 's';
+              p.style.animationDuration = (1.3 + Math.random() * 0.6).toFixed(2) + 's';
+              const size = 1.5 + Math.random() * 1.5;
+              p.style.width = size + 'px';
+              p.style.height = size + 'px';
+              fa.appendChild(p);
+            }
+          })();
+          </script>
           <div class="floor-tag" id="floorTag" aria-hidden="true">
             <div class="floor-tag-title">科研轨迹数据推动平台进化</div>
           </div>
@@ -2011,26 +2080,36 @@
         { a: 176, t: "中国科技云" },
         { a: 150, t: "国家科学数据中心" },
       ];
-      // 外圈资源名：前 9 个散布在顶部两行（整体下移），后 5 个底部左右分布
+      // 外圈资源名：环绕 3D 区域分布，不进入中央球体范围，相对均匀自然
+      // autonomous-loop 容器 940×800，中心约 (470, 400)，球体半径约 200px
+      // 资源散布在距中心 280~420px 的环带上
+      const resPosData = [
+        // 顶部区域
+        { x: 80,  y: 64 },   // 磐石大模型
+        { x: 310, y: 78 },   // 书生大模型
+        { x: 530, y: 66 },   // DFT 计算
+        { x: 740, y: 74 },   // 国家训练场
+        { x: 880, y: 94 },   // 冷冻电镜
+        // 左右两侧
+        { x: 56,  y: 136 },  // 分子对接
+        { x: 260, y: 150 },  // 爱赛思
+        { x: 620, y: 140 },  // 第一性原理
+        { x: 850, y: 156 },  // 中科大化学家
+        // 底部区域
+        { x: 60,  y: 694 },  // 国家超算中心
+        { x: 174, y: 750 },  // 天河超算
+        { x: 872, y: 628 },  // 星河启智
+        { x: 870, y: 760 },  // 中国科技云
+        { x: 796, y: 694 },  // 国家科学数据中心
+      ];
       resData.forEach((r, k) => {
         const el = document.createElement("span");
         el.className = "resource-label";
         el.dataset.outer = "1";
         el.textContent = r.t;
-        let x, y;
-        if (k < 9) {                                        // 顶部两行（下移）
-          const col = k % 5;
-          const row = Math.floor(k / 5);
-          x = 70 + col * 190 + (((k * 23) % 46) - 23);
-          y = 52 + row * 60 + ((k * 29) % 34);
-        } else {                                            // 底部区域（5 个）
-          const j = k - 9;                                  // 0~4
-          const bx = [60, 180, 740, 908, 770];
-          const by = [718, 750, 686, 736, 756];
-          x = bx[j]; y = by[j];
-        }
-        el.style.left = x + "px";
-        el.style.top = y + "px";
+        const pos = resPosData[k];
+        el.style.left = pos.x + "px";
+        el.style.top = pos.y + "px";
         loop.appendChild(el);
       });
 
@@ -2408,6 +2487,9 @@
         floorShown = true;
         floorTagEl.classList.add('visible');
       }
+      // 重启光流动动画：先移除再加回
+      floorTagEl.classList.remove('lit');
+      void floorTagEl.offsetWidth;
       floorTagEl.classList.add('lit');
       if (floorArrowEl) floorArrowEl.classList.add('lit');
       clearTimeout(floorTimer);
