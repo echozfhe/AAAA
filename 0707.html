@@ -2539,6 +2539,116 @@
       margin-bottom: 10px;
     }
 
+    /* 分组标题（已完成 / 进行中）*/
+    .task-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 12px 2px 8px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 650;
+      letter-spacing: .14em;
+      color: var(--gc, var(--ink-mute));
+    }
+    .task-group::before {
+      content: "";
+      flex: 0 0 auto;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gc, var(--vermilion));
+      box-shadow: 0 0 8px var(--gc, var(--vermilion));
+    }
+    .task-group::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, color-mix(in srgb, var(--gc, var(--vermilion)) 45%, var(--rule)), transparent);
+    }
+    .task-group .tg-count {
+      flex: 0 0 auto;
+      min-width: 16px;
+      height: 16px;
+      padding: 0 5px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: color-mix(in srgb, var(--gc, var(--vermilion)) 22%, transparent);
+      color: var(--gc, var(--vermilion));
+      font-size: 10px;
+      font-weight: 700;
+    }
+    .task-group.done { --gc: var(--warning-deep); }
+    .task-group.running { --gc: var(--vermilion-6); }
+    .task-group.done::before { content: none; }
+    .tg-icon {
+      flex: 0 0 auto;
+      width: 15px;
+      height: 15px;
+      fill: var(--gc, var(--warning));
+      filter: drop-shadow(0 0 6px color-mix(in srgb, var(--gc, var(--warning)) 65%, transparent));
+    }
+
+    /* 成果卡片：金色高光，营造"有影响力的成功成果"氛围 */
+    .task-item.done {
+      background:
+        linear-gradient(90deg, color-mix(in srgb, var(--warning) 16%, transparent), transparent 60%),
+        rgba(26, 22, 16, .74);
+      border-color: color-mix(in srgb, var(--warning) 32%, var(--rule));
+      box-shadow: 0 0 22px -8px color-mix(in srgb, var(--warning) 50%, transparent);
+    }
+    .task-item.running {
+      background:
+        linear-gradient(90deg, color-mix(in srgb, var(--accent) 11%, transparent), transparent 55%),
+        rgba(18, 22, 27, .72);
+    }
+    /* 成果徽章：实心金 */
+    .task-live.done {
+      background: color-mix(in srgb, var(--warning) 88%, transparent);
+      border-color: transparent;
+      color: #1a1206;
+    }
+    .task-item.done .task-name { color: #fff; }
+    .task-item.done .tp-label {
+      background: color-mix(in srgb, var(--warning) 20%, transparent);
+      color: var(--warning-deep);
+    }
+    .task-item.done .tp-text {
+      color: #fdf3e2;
+      font-weight: 600;
+      font-size: 12px;
+    }
+    /* 成果配图：放大 + 暗角压边让文字更聚焦、图更像"成果展板" */
+    .task-item.done .task-monitor {
+      flex-basis: 146px;
+      border-color: color-mix(in srgb, var(--warning) 34%, var(--rule));
+    }
+    .task-item.done .task-monitor::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(100deg, rgba(20, 16, 10, .6), transparent 52%);
+      pointer-events: none;
+    }
+    .task-monitor .mon-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: .95;
+    }
+    .task-monitor.result .mon-label {
+      z-index: 2;
+      padding: 1px 6px;
+      border-radius: 2px;
+      background: color-mix(in srgb, var(--warning) 30%, rgba(8, 11, 16, .7));
+      color: #fff5e4;
+      font-weight: 600;
+    }
+
     @keyframes taskScroll {
       from { transform: translateY(0); }
       to { transform: translateY(-50%); }
@@ -3078,6 +3188,80 @@
             <div class="tasks-title"><span>科研任务</span><span class="title-meta">进行中 3 · 已完成 5</span></div>
             <div class="task-list">
               <div class="task-track" id="taskTrack">
+                <div class="task-group done"><svg class="tg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.27 5.82.85-4.21 4.1.99 5.8L12 16.9l-5.2 2.72.99-5.8-4.21-4.1 5.82-.85z"/></svg><span>成果</span></div>
+
+                <article class="task-item done" style="--accent: var(--warning);">
+                  <div class="task-info">
+                    <div class="task-head">
+                      <div class="task-title"><div><div class="task-name">药物筛选智能体 MolClaw</div><div class="task-domain">联合北京大学</div></div></div>
+                      <span class="task-live done">已完成</span>
+                    </div>
+                    <div class="task-progress"><span class="tp-label">成果</span><span class="tp-text">端到端自动化药物分子评价、筛选及优化</span></div>
+                  </div>
+                  <div class="task-monitor result">
+                    <img class="mon-img" src="./outcomes/molclaw.png" alt="药物筛选成果配图" loading="lazy">
+                    <span class="mon-label">成果</span>
+                  </div>
+                </article>
+
+                <article class="task-item done" style="--accent: var(--warning);">
+                  <div class="task-info">
+                    <div class="task-head">
+                      <div class="task-title"><div><div class="task-name">生物多智能体 OriGene “元生”</div><div class="task-domain">联合临港实验室</div></div></div>
+                      <span class="task-live done">已完成</span>
+                    </div>
+                    <div class="task-progress"><span class="tp-label">成果</span><span class="tp-text">超越闭源模型，可发现原创靶标</span></div>
+                  </div>
+                  <div class="task-monitor result">
+                    <img class="mon-img" src="./outcomes/origene.png" alt="生物多智能体成果配图" loading="lazy">
+                    <span class="mon-label">成果</span>
+                  </div>
+                </article>
+
+                <article class="task-item done" style="--accent: var(--warning);">
+                  <div class="task-info">
+                    <div class="task-head">
+                      <div class="task-title"><div><div class="task-name">储能材料和电网跨尺度优化</div><div class="task-domain">联合中海储能、石油大学</div></div></div>
+                      <span class="task-live done">已完成</span>
+                    </div>
+                    <div class="task-progress"><span class="tp-label">成果</span><span class="tp-text">完成液流电池示范项目，已部署应用</span></div>
+                  </div>
+                  <div class="task-monitor result">
+                    <img class="mon-img" src="./outcomes/energy.png" alt="储能材料成果配图" loading="lazy">
+                    <span class="mon-label">成果</span>
+                  </div>
+                </article>
+
+                <article class="task-item done" style="--accent: var(--warning);">
+                  <div class="task-info">
+                    <div class="task-head">
+                      <div class="task-title"><div><div class="task-name">超大规模无缺陷中性原子量子阵列原创算法</div><div class="task-domain">联合合肥实验室</div></div></div>
+                      <span class="task-live done">已完成</span>
+                    </div>
+                    <div class="task-progress"><span class="tp-label">成果</span><span class="tp-text">世界首个常数时间原子排布</span></div>
+                  </div>
+                  <div class="task-monitor result">
+                    <img class="mon-img" src="./outcomes/quantum.png" alt="量子阵列成果配图" loading="lazy">
+                    <span class="mon-label">成果</span>
+                  </div>
+                </article>
+
+                <article class="task-item done" style="--accent: var(--warning);">
+                  <div class="task-info">
+                    <div class="task-head">
+                      <div class="task-title"><div><div class="task-name">同震破裂过程分析智能体</div><div class="task-domain">联合国家地震局</div></div></div>
+                      <span class="task-live done">已完成</span>
+                    </div>
+                    <div class="task-progress"><span class="tp-label">成果</span><span class="tp-text">分析效率提升一倍以上</span></div>
+                  </div>
+                  <div class="task-monitor result">
+                    <img class="mon-img" src="./outcomes/seismic.png" alt="同震分析成果配图" loading="lazy">
+                    <span class="mon-label">成果</span>
+                  </div>
+                </article>
+
+                <div class="task-group running"><span>进行中</span></div>
+
                 <article class="task-item running" style="--accent: #7aa5db;" data-task="蛋白质自主进化">
                   <div class="task-info">
                     <div class="task-head">
@@ -3138,76 +3322,6 @@
                     <span class="mon-label">远程监控</span>
                     <span class="mon-rec">REC</span>
                     <span class="mon-ph">信号接入中…</span>
-                  </div>
-                </article>
-
-                <article class="task-item done" style="--accent: var(--success);">
-                  <div class="task-info">
-                    <div class="task-head">
-                      <div class="task-title"><div><div class="task-name">药物筛选智能体 MolClaw</div><div class="task-domain">联合北京大学</div></div></div>
-                      <span class="task-live done">已完成</span>
-                    </div>
-                    <div class="task-progress"><span class="tp-label">成果</span><span class="tp-text">端到端自动化药物分子评价、筛选及优化</span></div>
-                  </div>
-                  <div class="task-monitor result">
-                    <span class="mon-label">成果配图</span>
-                    <span class="mon-ph">IMG</span>
-                  </div>
-                </article>
-
-                <article class="task-item done" style="--accent: var(--success);">
-                  <div class="task-info">
-                    <div class="task-head">
-                      <div class="task-title"><div><div class="task-name">生物多智能体 OriGene “元生”</div><div class="task-domain">联合临港实验室</div></div></div>
-                      <span class="task-live done">已完成</span>
-                    </div>
-                    <div class="task-progress"><span class="tp-label">成果</span><span class="tp-text">超越闭源模型，可发现原创靶标</span></div>
-                  </div>
-                  <div class="task-monitor result">
-                    <span class="mon-label">成果配图</span>
-                    <span class="mon-ph">IMG</span>
-                  </div>
-                </article>
-
-                <article class="task-item done" style="--accent: var(--success);">
-                  <div class="task-info">
-                    <div class="task-head">
-                      <div class="task-title"><div><div class="task-name">储能材料和电网跨尺度优化</div><div class="task-domain">联合中海储能、石油大学</div></div></div>
-                      <span class="task-live done">已完成</span>
-                    </div>
-                    <div class="task-progress"><span class="tp-label">成果</span><span class="tp-text">完成液流电池示范项目，已部署应用</span></div>
-                  </div>
-                  <div class="task-monitor result">
-                    <span class="mon-label">成果配图</span>
-                    <span class="mon-ph">IMG</span>
-                  </div>
-                </article>
-
-                <article class="task-item done" style="--accent: var(--success);">
-                  <div class="task-info">
-                    <div class="task-head">
-                      <div class="task-title"><div><div class="task-name">超大规模无缺陷中性原子量子阵列原创算法</div><div class="task-domain">联合合肥实验室</div></div></div>
-                      <span class="task-live done">已完成</span>
-                    </div>
-                    <div class="task-progress"><span class="tp-label">成果</span><span class="tp-text">世界首个常数时间原子排布</span></div>
-                  </div>
-                  <div class="task-monitor result">
-                    <span class="mon-label">成果配图</span>
-                    <span class="mon-ph">IMG</span>
-                  </div>
-                </article>
-
-                <article class="task-item done" style="--accent: var(--success);">
-                  <div class="task-info">
-                    <div class="task-head">
-                      <div class="task-title"><div><div class="task-name">同震破裂过程分析智能体</div><div class="task-domain">联合国家地震局</div></div></div>
-                      <span class="task-live done">已完成</span>
-                    </div>
-                    <div class="task-progress"><span class="tp-label">成果</span><span class="tp-text">分析效率提升一倍以上</span></div>
-                  </div>
-                  <div class="task-monitor result">
-                    <span class="mon-label">成果配图</span>
-                    <span class="mon-ph">IMG</span>
                   </div>
                 </article>
               </div>
@@ -3557,13 +3671,13 @@
       track.style.setProperty("--dur", dur + "s");
       track.classList.add("rolling");
 
-      // 任务卡时不时轮流点亮一下（含克隆卡，避免只亮上半区）
-      const allCards = [...track.children];
+      // 任务卡时不时轮流点亮一下（只点卡片，不点分组标题；含克隆卡）
+      const allCards = [...track.querySelectorAll(".task-item")];
       let fi = Math.floor(allCards.length / 2);   // 从中段起，避开开场
       setInterval(() => {
+        if (!allCards.length) return;
         const el = allCards[fi % allCards.length];
         fi += 1;
-        if (!el) return;
         el.classList.add("link-on");
         setTimeout(() => el.classList.remove("link-on"), 1100);
       }, 2200);
@@ -3612,45 +3726,80 @@
       group.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(p),
         new THREE.LineBasicMaterial({ color:C.ruleSoft, transparent:true, opacity:.32 }))); }
 
-    // ===== 中央：螺旋上升粒子（体现平台迭代进化）=====
+    // ===== 中央：螺旋上升粒子（参数集中在 SP，可被控制面板实时调整）=====
     const spiralGroup = new THREE.Group(); group.add(spiralGroup);
-    const SP_N = 260, SP_TURNS = 3.2, SP_H = 8.4, SP_R0 = 3.5, SP_R1 = 0.4;
-    const SP_BR = 0.66, SP_BG = 0.80, SP_BB = 0.94;   // 基色 ≈ #a8ccef
-    const spPos = new Float32Array(SP_N * 3);
-    const spCol = new Float32Array(SP_N * 3);
-    const spGeo = new THREE.BufferGeometry();
-    spGeo.setAttribute('position', new THREE.BufferAttribute(spPos, 3));
-    spGeo.setAttribute('color', new THREE.BufferAttribute(spCol, 3));
-    const spBase = [];
-    for (let i = 0; i < SP_N; i++) spBase.push({ f: i / SP_N, strand: i % 3, jit: 0.55 + 0.45 * ((i * 0.6180339) % 1) });
-    const spCanvas = document.createElement('canvas'); spCanvas.width = spCanvas.height = 64;
-    { const g = spCanvas.getContext('2d'), grd = g.createRadialGradient(32, 32, 0, 32, 32, 32);
-      grd.addColorStop(0, 'rgba(255,255,255,1)'); grd.addColorStop(0.35, 'rgba(180,206,240,0.8)'); grd.addColorStop(1, 'rgba(180,206,240,0)');
-      g.fillStyle = grd; g.fillRect(0, 0, 64, 64); }
-    const spiral = new THREE.Points(spGeo, new THREE.PointsMaterial({
-      size: 0.36, map: new THREE.CanvasTexture(spCanvas), vertexColors: true,
-      transparent: true, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending, sizeAttenuation: true }));
-    spiral.renderOrder = 2; spiralGroup.add(spiral);
-    // 螺旋起点微光
-    const spCore = new THREE.Mesh(new THREE.SphereGeometry(0.5, 24, 18),
-      new THREE.MeshBasicMaterial({ color: 0xbcd6f2, transparent: true, opacity: .45, blending: THREE.AdditiveBlending, depthWrite: false, depthTest: false }));
-    spCore.position.y = 0.2; spCore.renderOrder = 1; spiralGroup.add(spCore);
+    const SP = {
+      count: 680, strands: 3, turns: 1.9, height: 10.4, r0: 7, r1: 1.1, flow: 0.12,
+      spin: 0.5, spread: 0.8, drift: 0.85, depth: 0.35,
+      glowSize: 1.3, glowOp: 0.14, midSize: 0.6, midOp: 0.72, coreSize: 0.46, coreOp: 0.68,
+      baseSize: 8, baseOp: 0,
+      loR: 1, loG: 1, loB: 1, hiR: 0.059, hiG: 0.071, hiB: 0.098
+    };
+    let pf0, pstr, pdr, pda, pdy, pdrift, pjit;
+    function buildSpiralBase(n){
+      pf0 = new Float32Array(n); pstr = new Uint8Array(n);
+      pdr = new Float32Array(n); pda = new Float32Array(n); pdy = new Float32Array(n);
+      pdrift = new Float32Array(n); pjit = new Float32Array(n);
+      for (let i = 0; i < n; i++){
+        const s = (i * 0.6180339) % 1, s2 = (i * 0.7548776) % 1, s3 = (i * 0.3125) % 1;
+        pf0[i] = i / n; pstr[i] = i % SP.strands;
+        pdr[i] = (s - 0.5) * 2.6; pda[i] = (s2 - 0.5) * 0.55; pdy[i] = (s3 - 0.5) * 0.9;
+        pdrift[i] = s2 * 6.2831853; pjit[i] = 0.5 + 0.5 * s;
+      }
+    }
+    let spPos, spCol, spGeo;
+    function allocSpiralGeo(n){
+      spPos = new Float32Array(n * 3); spCol = new Float32Array(n * 3);
+      const g = new THREE.BufferGeometry();
+      g.setAttribute('position', new THREE.BufferAttribute(spPos, 3));
+      g.setAttribute('color', new THREE.BufferAttribute(spCol, 3));
+      return g;
+    }
+    const spDot = (() => { const c = document.createElement('canvas'); c.width = c.height = 64;
+      const g = c.getContext('2d'), gr = g.createRadialGradient(32,32,0,32,32,32);
+      gr.addColorStop(0,'rgba(255,255,255,1)'); gr.addColorStop(0.4,'rgba(200,222,248,0.7)'); gr.addColorStop(1,'rgba(200,222,248,0)');
+      g.fillStyle = gr; g.fillRect(0,0,64,64); return new THREE.CanvasTexture(c); })();
+    buildSpiralBase(SP.count); spGeo = allocSpiralGeo(SP.count);
+    const spMat = (size, op) => new THREE.PointsMaterial({ size, map: spDot, vertexColors: true, opacity: op,
+      transparent: true, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending, sizeAttenuation: true });
+    const spLayers = [ new THREE.Points(spGeo, spMat(SP.glowSize, SP.glowOp)),
+                       new THREE.Points(spGeo, spMat(SP.midSize, SP.midOp)),
+                       new THREE.Points(spGeo, spMat(SP.coreSize, SP.coreOp)) ];
+    spLayers[0].renderOrder = 2; spLayers[1].renderOrder = 3; spLayers[2].renderOrder = 4;
+    spLayers.forEach(m => spiralGroup.add(m));
+    const baseGlow = new THREE.Sprite(new THREE.SpriteMaterial({ map: spDot, color: 0xa8ccef, transparent: true, opacity: SP.baseOp, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending }));
+    baseGlow.position.y = 0.2; baseGlow.renderOrder = 1; spiralGroup.add(baseGlow);
+    function rebuildSpiral(n){
+      n = Math.max(60, Math.round(n)); SP.count = n;
+      buildSpiralBase(n); const ng = allocSpiralGeo(n);
+      spLayers.forEach(m => { m.geometry = ng; });
+      spGeo.dispose(); spGeo = ng;
+    }
+    function applySpiralStyle(){
+      spLayers[0].material.size = SP.glowSize; spLayers[0].material.opacity = SP.glowOp;
+      spLayers[1].material.size = SP.midSize;  spLayers[1].material.opacity = SP.midOp;
+      spLayers[2].material.size = SP.coreSize; spLayers[2].material.opacity = SP.coreOp;
+      baseGlow.material.opacity = SP.baseOp;
+    }
     function updateSpiral(t){
-      const spin = t * 0.5;
-      for (let i = 0; i < SP_N; i++){
-        const b = spBase[i];
-        const f = (b.f + t * 0.055) % 1;
-        const r = SP_R0 + (SP_R1 - SP_R0) * f;
-        const ang = f * SP_TURNS * 6.2831853 + b.strand * 2.0943951 + spin;
-        spPos[i * 3] = r * Math.cos(ang);
-        spPos[i * 3 + 1] = f * SP_H;
-        spPos[i * 3 + 2] = r * Math.sin(ang);
-        let a = Math.min(f / 0.10, (1 - f) / 0.18); a = a < 0 ? 0 : (a > 1 ? 1 : a); a *= b.jit;
-        spCol[i * 3] = SP_BR * a; spCol[i * 3 + 1] = SP_BG * a; spCol[i * 3 + 2] = SP_BB * a;
+      const spin = t * SP.spin, twoPi = 6.2831853, strandStep = twoPi / SP.strands, ZREF = SP.r0 + 2.0, n = SP.count;
+      const dR = SP.hiR - SP.loR, dG = SP.hiG - SP.loG, dB = SP.hiB - SP.loB;
+      for (let i = 0; i < n; i++){
+        const f = (pf0[i] + t * SP.flow) % 1;
+        const rBaseline = SP.r0 + (SP.r1 - SP.r0) * f;
+        const r = rBaseline + pdr[i] * SP.spread + 0.4 * SP.drift * Math.sin(t * 0.6 + pdrift[i]);
+        const ang = f * SP.turns * twoPi + pstr[i] * strandStep + spin + pda[i] * SP.spread;
+        const x = r * Math.cos(ang), y = f * SP.height + pdy[i] * SP.spread, z = r * Math.sin(ang);
+        let depth = (z + ZREF) / (2 * ZREF); depth = depth < 0 ? 0 : (depth > 1 ? 1 : depth);
+        const near = 1 - SP.depth * 0.55 * (1 - depth);
+        let a = Math.min(f / 0.08, (1 - f) / 0.16); a = a < 0 ? 0 : (a > 1 ? 1 : a);
+        a *= pjit[i] * near;
+        spPos[i*3]=x; spPos[i*3+1]=y; spPos[i*3+2]=z;
+        spCol[i*3]=(SP.loR+dR*f)*a; spCol[i*3+1]=(SP.loG+dG*f)*a; spCol[i*3+2]=(SP.loB+dB*f)*a;
       }
       spGeo.attributes.position.needsUpdate = true;
       spGeo.attributes.color.needsUpdate = true;
-      spCore.scale.setScalar(1 + 0.12 * Math.sin(t * 2.0));
+      baseGlow.scale.setScalar(SP.baseSize * (0.92 + 0.08 * Math.sin(t * 1.6)));
     }
     updateSpiral(0);
 
@@ -3804,7 +3953,7 @@
       if(!reduce){
         tEl += dt;
         stepLoop(dt);
-        updateSpiral(tEl);
+        updateSpiral(tEl, dt);
         ripples.forEach(rp=>{ const t=(tEl/RIP_T+rp.off)%1, rad=RIP_MIN+(RIP_MAX-RIP_MIN)*t;
           rp.L.scale.set(rad,1,rad); rp.mat.opacity = .5*(1-t)*(1-t); });
       } else if (curFront < 0) {                       // 减动效：静态点亮首个节点
