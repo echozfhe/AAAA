@@ -297,6 +297,7 @@
       height: 928px;
       display: grid;
       grid-template-columns: 468px minmax(0, 1fr) 528px;
+      grid-template-rows: minmax(0, 1fr);
       gap: 20px;
       margin-top: 10px;
     }
@@ -406,39 +407,57 @@
       min-height: 0;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      gap: 5px;
-      padding: 6px 9px;
+      justify-content: space-between;
+      gap: 7px;
+      padding: 9px 11px 9px 14px;
       border: 1px solid var(--rule);
       border-radius: 2px;
-      background: rgba(20, 22, 27, .72);
+      background:
+        linear-gradient(90deg, color-mix(in srgb, var(--accent) 9%, transparent), transparent 52%),
+        rgba(20, 22, 27, .72);
       box-shadow: none;
       overflow: hidden;
       transition: border-color .4s var(--ease), box-shadow .4s var(--ease), background .4s var(--ease);
     }
 
     .resource-item::before {
-      content: none;
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--accent);
+      opacity: .78;
+    }
+
+    /* 被中央步骤联动点亮 */
+    .resource-item.res-lit {
+      border-color: color-mix(in srgb, var(--accent) 70%, var(--rule));
+      background:
+        linear-gradient(90deg, color-mix(in srgb, var(--accent) 22%, transparent), transparent 60%),
+        rgba(24, 28, 35, .82);
+      box-shadow: 0 0 22px -4px color-mix(in srgb, var(--accent) 60%, transparent);
+    }
+
+    .resource-item.res-lit::before {
+      opacity: 1;
+      width: 3px;
+      box-shadow: 0 0 12px var(--accent);
     }
 
     .resource-main {
       display: flex;
-      align-self: center;
       align-items: baseline;
       gap: 4px;
       min-width: 0;
-      opacity: .58;
-      justify-content: flex-end;
-      padding: 0 6px;
-      height: 18px;
-      min-width: 22px;
-      border: 0;
-      border-radius: 10px;
-      background: rgba(28, 31, 38, .72);
     }
 
     .resource-name {
-      color: var(--ink-soft);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--ink);
       font-family: var(--font-sans);
       font-size: 14px;
       line-height: 1;
@@ -447,11 +466,21 @@
       white-space: nowrap;
     }
 
+    .resource-name::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px color-mix(in srgb, var(--accent) 70%, transparent);
+      animation: statusBreath 2.4s ease-in-out infinite;
+    }
+
     .resource-value {
-      color: rgba(179, 184, 192, .72);
-      font-family: var(--font-sans);
+      color: var(--ink);
+      font-family: var(--font-mono);
       font-variant-numeric: tabular-nums;
-      font-size: 11px;
+      font-size: 17px;
       line-height: 1;
       font-weight: 600;
       letter-spacing: 0;
@@ -460,7 +489,7 @@
     .resource-unit {
       color: var(--ink-mute);
       font-family: var(--font-mono);
-      font-size: 9px;
+      font-size: 10px;
       font-weight: 500;
       white-space: nowrap;
     }
@@ -469,34 +498,33 @@
       position: relative;
       z-index: 1;
       display: flex;
-      align-items: center;
+      align-items: baseline;
       justify-content: space-between;
       gap: 10px;
-      margin-top: 0;
       min-width: 0;
-      min-height: 18px;
     }
 
     .resource-capabilities {
       position: relative;
       z-index: 1;
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 2px;
+      grid-template-columns: 1fr 1fr;
+      gap: 5px;
       min-width: 0;
     }
 
     .resource-chip {
       display: flex;
       align-items: center;
-      gap: 7px;
+      gap: 6px;
+      min-width: 0;
       max-width: 100%;
-      min-height: 20px;
-      padding: 1px 7px;
-      border: 0;
+      min-height: 22px;
+      padding: 2px 7px;
+      border: 1px solid var(--rule-soft);
       border-radius: 2px;
-      background: rgba(28, 31, 38, .72);
-      color: rgba(226, 236, 244, .76);
+      background: rgba(28, 31, 38, .55);
+      color: rgba(226, 236, 244, .74);
       font-family: var(--font-sans);
       font-size: 11px;
       font-weight: 500;
@@ -1027,8 +1055,8 @@
       left: 50%;
       bottom: 184px;
       transform: translateX(-50%);
-      width: 748px;
-      max-width: calc(100% - 48px);
+      width: 812px;
+      max-width: calc(100% - 40px);
       pointer-events: none;
     }
 
@@ -1174,7 +1202,7 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      gap: 8px;
+      gap: 9px;
     }
 
     .nd-desc {
@@ -1236,13 +1264,13 @@
       align-items: center;
       justify-content: center;
       min-height: 26px;
-      padding: 4px 12px;
+      padding: 4px 10px;
       border: 1px solid color-mix(in srgb, var(--dc) 32%, var(--rule));
       border-radius: 3px;
       background: color-mix(in srgb, var(--dc) 10%, rgba(20, 22, 27, .55));
       color: var(--ink-soft);
       font-family: var(--font-sans);
-      font-size: 12.5px;
+      font-size: 12px;
       font-weight: 540;
       letter-spacing: .02em;
       white-space: nowrap;
@@ -1256,7 +1284,8 @@
     }
 
     .nd-col.multi {
-      align-items: center;
+      flex-direction: column;
+      align-items: stretch;
       gap: 4px;
       padding: 3px 5px;
       border: 1px dashed color-mix(in srgb, var(--dc) 34%, var(--rule));
@@ -1271,6 +1300,7 @@
       color: var(--ink-soft);
       font-family: var(--font-sans);
       font-size: 12px;
+      text-align: center;
       white-space: nowrap;
     }
 
@@ -1282,8 +1312,82 @@
     }
 
     .nd-arrow svg {
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
+    }
+
+    /* 节点详情：步骤标题 + 流程 + 资源 */
+    .nd-head {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .nd-title {
+      flex: 0 0 auto;
+      color: var(--dc);
+      font-family: var(--font-title);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      white-space: nowrap;
+      text-shadow: 0 0 14px color-mix(in srgb, var(--dc) 38%, transparent);
+    }
+
+    .nd-head .nd-desc {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .nd-res-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      min-width: 0;
+      padding-top: 10px;
+      border-top: 1px dashed color-mix(in srgb, var(--dc) 20%, var(--rule));
+    }
+
+    .nd-res {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      height: 24px;
+      padding: 0 10px 0 6px;
+      border: 1px solid color-mix(in srgb, var(--dc) 24%, var(--rule));
+      border-radius: 2px;
+      background: color-mix(in srgb, var(--dc) 8%, rgba(20, 22, 27, .55));
+      color: var(--ink-soft);
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: .02em;
+      white-space: nowrap;
+    }
+
+    .nd-res-logo {
+      flex: 0 0 auto;
+      width: 22px;
+      height: 14px;
+      display: grid;
+      place-items: center;
+      border: 1px dashed color-mix(in srgb, var(--dc) 48%, var(--rule));
+      border-radius: 2px;
+      background: color-mix(in srgb, var(--dc) 12%, transparent);
+      color: color-mix(in srgb, var(--dc) 80%, var(--ink-faint));
+      font-family: var(--font-mono);
+      font-size: 6.5px;
+      font-weight: 650;
+      letter-spacing: .06em;
+    }
+
+    /* 流程首框（输入）高亮为暖色，与末框（产出）呼应 */
+    .nd-box.in {
+      color: #fff;
+      border-color: color-mix(in srgb, var(--warning) 62%, transparent);
+      background: color-mix(in srgb, var(--warning) 26%, rgba(20, 22, 27, .5));
+      box-shadow: 0 0 14px -5px color-mix(in srgb, var(--warning) 62%, transparent);
     }
 
     /* 进化 slogan：3D 场景下方，带框，首次出现后常驻高亮，定格时光流动 */
@@ -1615,7 +1719,7 @@
 
     .right-panel {
       display: grid;
-      grid-template-rows: 170px 330px minmax(0, 1fr);
+      grid-template-rows: 170px minmax(0, 1fr);
       gap: 12px;
       background: transparent;
       border: 0;
@@ -1684,87 +1788,41 @@
       position: relative;
       min-height: 0;
       contain: layout paint;
-      display: flex;
-      flex-wrap: wrap;
-      align-content: center;
-      justify-content: center;
-      gap: 18px 28px;
-      padding: 14px 22px;
       overflow: hidden;
       border: 1px solid var(--rule);
       border-radius: 2px;
       background:
-        radial-gradient(circle at 22% 28%, rgba(122, 165, 219, .11), transparent 34%),
-        radial-gradient(circle at 78% 62%, rgba(164, 184, 112, .08), transparent 34%),
+        radial-gradient(circle at 50% 46%, rgba(122, 165, 219, .12), transparent 46%),
+        radial-gradient(circle at 22% 24%, rgba(122, 165, 219, .08), transparent 32%),
         rgba(20, 22, 27, .62);
     }
 
     .user-cloud::before {
-      content: "";
-      position: absolute;
-      inset: 14px;
-      border: 1px solid rgba(122, 165, 219, .08);
-      border-radius: 50%;
-      transform: none;
-    }
-
-    .user-cloud::after {
-      content: "";
-      position: absolute;
-      left: 30px;
-      right: 30px;
-      top: 50%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(122, 165, 219, .18), transparent);
-    }
-
-    .user-bubble {
-      --uc: var(--vermilion);
-      position: relative;
-      left: auto;
-      top: auto;
-      translate: 0 0;
-      min-width: 0;
-      max-width: 100%;
-      display: inline-flex;
-      align-items: center;
-      height: auto;
-      padding: 0;
-      border: 0;
-      border-radius: 2px;
-      background: transparent;
-      color: color-mix(in srgb, var(--uc) 66%, var(--ink-soft));
-      font-family: var(--font-sans);
-      font-size: calc(var(--fz, 14px) - 3px);
-      font-weight: 600;
-      letter-spacing: .02em;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      box-shadow: none;
-      animation: userCloudFloat var(--dur, 7s) ease-in-out infinite;
-      animation-delay: var(--delay, 0s);
-    }
-
-    .user-bubble:nth-child(2),
-    .user-bubble:nth-child(5) {
-      transform: translateY(8px);
-    }
-
-    .user-bubble:nth-child(3) {
-      transform: translateX(-12px);
-    }
-
-    .user-bubble:nth-child(4) {
-      transform: translateX(10px);
-    }
-
-    .user-bubble::before {
       content: none;
     }
 
+    .user-cloud::after {
+      content: none;
+    }
+
+    .user-word {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      color: var(--uc, var(--ink-soft));
+      font-family: var(--font-title);
+      font-size: var(--fz, 15px);
+      font-weight: 600;
+      letter-spacing: .02em;
+      white-space: nowrap;
+      opacity: .92;
+      text-shadow: 0 0 18px color-mix(in srgb, var(--uc, var(--vermilion)) 28%, transparent);
+      animation: userCloudFloat var(--dur, 7s) ease-in-out infinite;
+      animation-delay: var(--delay, 0s);
+      will-change: translate;
+    }
+
     @keyframes userCloudFloat {
-      0%, 100% { translate: 0 0; opacity: .88; }
+      0%, 100% { translate: 0 0; opacity: .82; }
       50% { translate: 0 -5px; opacity: 1; }
     }
 
@@ -1825,20 +1883,37 @@
       min-width: 0;
       min-height: 0;
       display: grid;
-      grid-template-columns: 66px minmax(0, 1fr);
-      column-gap: 8px;
+      grid-template-columns: 34px minmax(0, 1fr);
+      column-gap: 11px;
       align-items: center;
-      padding: 5px 9px;
+      padding: 5px 11px 5px 9px;
       border: 1px solid var(--rule);
       border-radius: 2px;
       background:
-        linear-gradient(90deg, color-mix(in srgb, var(--oc) 10%, transparent), transparent 60%),
-        rgba(20, 22, 27, .72);
+        linear-gradient(90deg, color-mix(in srgb, var(--oc) 8%, transparent), transparent 46%),
+        rgba(20, 22, 27, .66);
       overflow: hidden;
+      transition: border-color .4s var(--ease), background .4s var(--ease);
     }
 
     .outcome-card::before {
       content: none;
+    }
+
+    .outcome-index {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border: 1px solid color-mix(in srgb, var(--oc) 34%, var(--rule));
+      border-radius: 2px;
+      background: color-mix(in srgb, var(--oc) 10%, transparent);
+      color: var(--oc);
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: .02em;
     }
 
     .outcome-visual {
@@ -2068,6 +2143,43 @@
       line-height: 1.25;
     }
 
+    /* ===== 科研任务：已完成卡（绿=已完成，蓝=进行中）===== */
+    .task-live.done::before {
+      content: "✓";
+      width: auto;
+      height: auto;
+      border-radius: 0;
+      background: none;
+      box-shadow: none;
+      opacity: 1;
+      animation: none;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    /* 已完成卡右侧「成果配图」占位（静态缩略，非实时监控）*/
+    .task-monitor.result {
+      background:
+        linear-gradient(color-mix(in srgb, var(--accent) 12%, transparent) 1px, transparent 1px),
+        linear-gradient(90deg, color-mix(in srgb, var(--accent) 12%, transparent) 1px, transparent 1px),
+        radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 60%),
+        linear-gradient(135deg, rgba(22, 26, 33, .92), rgba(12, 15, 20, .92));
+      background-size: 12px 12px, 12px 12px, auto, auto;
+    }
+
+    .task-monitor.result::before {
+      animation: none;
+      opacity: .3;
+    }
+
+    .task-monitor.result .mon-ph {
+      color: color-mix(in srgb, var(--accent) 72%, var(--ink-faint));
+      font-family: var(--font-mono);
+      letter-spacing: .18em;
+      font-weight: 650;
+    }
+
     /* ===== 中间底部：轻量运行状态 ===== */
     .center-run-card {
       position: absolute;
@@ -2162,25 +2274,27 @@
     }
 
     .load-bars {
-      height: 28px;
+      height: 30px;
       display: flex;
       align-items: flex-end;
       gap: 3px;
       padding: 3px 0 0;
+      border-bottom: 1px solid rgba(43, 47, 55, .7);
     }
 
     .load-bars span {
       flex: 1 1 0;
       min-width: 3px;
       height: var(--h);
-      border-radius: 1px 1px 0 0;
+      border-radius: 1.5px 1.5px 0 0;
       background:
-        linear-gradient(180deg, var(--vermilion-7), var(--vermilion-5) 58%, var(--vermilion-3));
-      opacity: .82;
+        linear-gradient(180deg, var(--vermilion-7), var(--vermilion-5) 55%, var(--vermilion-4));
+      opacity: .9;
+      transition: height .7s var(--ease), opacity .7s var(--ease);
     }
 
     .load-card[data-cluster="hpc"] .load-bars span {
-      background: linear-gradient(180deg, var(--warning-deep), var(--warning) 58%, var(--warning-soft));
+      background: linear-gradient(180deg, var(--warning-deep), var(--warning) 55%, var(--warning-soft));
     }
 
     @keyframes loadBarBreath {
@@ -2406,24 +2520,28 @@
       position: relative;
       flex: 1;
       min-height: 0;
-      display: grid;
-      grid-template-rows: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-      padding: 0 0 0;
+      overflow: hidden;
+      -webkit-mask: linear-gradient(180deg, transparent, #000 3%, #000 97%, transparent);
+      mask: linear-gradient(180deg, transparent, #000 3%, #000 97%, transparent);
     }
 
-    /* 滚动接力：任务卡绝对定位、按槽位平移，底部卡上顶到顶部 */
-    .task-list.feed {
-      display: block;
+    /* 竖向自动滚动轨道：克隆一份接续，translateY(-50%) 无缝循环 */
+    .task-track {
+      display: flex;
+      flex-direction: column;
     }
 
-    .task-list.feed .task-item {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      will-change: transform;
-      transition: transform .6s var(--ease-out), border-color .4s var(--ease), box-shadow .4s var(--ease);
+    .task-track.rolling {
+      animation: taskScroll var(--dur, 40s) linear infinite;
+    }
+
+    .task-track .task-item {
+      margin-bottom: 10px;
+    }
+
+    @keyframes taskScroll {
+      from { transform: translateY(0); }
+      to { transform: translateY(-50%); }
     }
 
     .task-item {
@@ -2950,131 +3068,149 @@
           </section>
         </section>
 
-        <aside class="right-panel" aria-label="平台用户、成果与实时任务">
+        <aside class="right-panel" aria-label="平台用户与科研任务">
           <section class="users-card" aria-label="平台用户">
-            <div class="users-title"><span>平台用户</span><span class="title-meta">B 端合作伙伴</span></div>
-            <div class="user-cloud">
-              <span class="user-bubble" style="--x: 24px; --y: 10px; --fz: 17px; --h: 34px; --uc: var(--blue); --dur: 7.4s;">北京大学</span>
-              <span class="user-bubble" style="--x: 206px; --y: 8px; --fz: 15px; --h: 32px; --uc: var(--green); --dur: 6.8s; --delay: -1.2s;">苏州国家实验室</span>
-              <span class="user-bubble" style="--x: 78px; --y: 48px; --fz: 16px; --h: 34px; --uc: var(--gold); --dur: 7.8s; --delay: -2s;">临港国家实验室</span>
-              <span class="user-bubble" style="--x: 258px; --y: 48px; --fz: 13px; --h: 30px; --uc: var(--violet); --dur: 7.1s; --delay: -.5s;">中国科学院物理研究所</span>
-              <span class="user-bubble" style="--x: 26px; --y: 84px; --fz: 14px; --h: 30px; --uc: var(--orange); --dur: 6.5s; --delay: -1.7s;">国家地震局</span>
-              <span class="user-bubble" style="--x: 322px; --y: 84px; --fz: 15px; --h: 32px; --uc: var(--teal); --dur: 7.6s; --delay: -2.6s;">中海储能</span>
-            </div>
+            <div class="users-title"><span>平台用户</span><span class="title-meta">已服务 6+ 科研机构与企业 · 欢迎共建</span></div>
+            <div class="user-cloud" id="userCloud"></div>
           </section>
 
-          <section class="outcomes-card" aria-label="成果产出">
-            <div class="outcomes-title"><span>成果产出</span></div>
-            <div class="outcome-list">
-              <article class="outcome-card" style="--oc: var(--blue);">
-                <div class="outcome-visual"><span>配图</span></div>
-                <div class="outcome-copy">
-                  <div class="outcome-head"><div class="outcome-title">药物筛选智能体 MolClaw</div><div class="outcome-partner">联合北京大学</div></div>
-                  <div class="outcome-result">端到端自动化药物分子评价、筛选及优化</div>
-                </div>
-              </article>
-              <article class="outcome-card" style="--oc: var(--green);">
-                <div class="outcome-visual"><span>配图</span></div>
-                <div class="outcome-copy">
-                  <div class="outcome-head"><div class="outcome-title">生物多智能体 OriGene “元生”</div><div class="outcome-partner">联合临港实验室</div></div>
-                  <div class="outcome-result">超越闭源模型，可发现原创靶标</div>
-                </div>
-              </article>
-              <article class="outcome-card" style="--oc: var(--gold);">
-                <div class="outcome-visual"><span>配图</span></div>
-                <div class="outcome-copy">
-                  <div class="outcome-head"><div class="outcome-title">储能材料和电网跨尺度优化</div><div class="outcome-partner">联合中海储能、石油大学</div></div>
-                  <div class="outcome-result">完成液流电池示范项目，已部署应用</div>
-                </div>
-              </article>
-              <article class="outcome-card" style="--oc: var(--violet);">
-                <div class="outcome-visual"><span>配图</span></div>
-                <div class="outcome-copy">
-                  <div class="outcome-head"><div class="outcome-title">超大规模无缺陷中性原子量子阵列原创算法</div><div class="outcome-partner">联合合肥实验室</div></div>
-                  <div class="outcome-result">世界首个常数时间原子排布</div>
-                </div>
-              </article>
-              <article class="outcome-card" style="--oc: var(--orange);">
-                <div class="outcome-visual"><span>配图</span></div>
-                <div class="outcome-copy">
-                  <div class="outcome-head"><div class="outcome-title">同震破裂过程分析智能体</div><div class="outcome-partner">联合国家地震局</div></div>
-                  <div class="outcome-result">分析效率提升一倍以上</div>
-                </div>
-              </article>
-            </div>
-          </section>
-
-          <section class="tasks-card" aria-label="实时任务">
-            <div class="tasks-title"><span>实时任务</span></div>
+          <section class="tasks-card" aria-label="科研任务">
+            <div class="tasks-title"><span>科研任务</span><span class="title-meta">进行中 3 · 已完成 5</span></div>
             <div class="task-list">
-              <article class="task-item" style="--accent: var(--green);" data-task="蛋白质自主进化">
-                <div class="task-info">
-                  <div class="task-head">
-                    <div class="task-title">
-                      <div><div class="task-name">蛋白质自主进化</div><div class="task-domain">领域：生命科学</div></div>
+              <div class="task-track" id="taskTrack">
+                <article class="task-item running" style="--accent: #7aa5db;" data-task="蛋白质自主进化">
+                  <div class="task-info">
+                    <div class="task-head">
+                      <div class="task-title"><div><div class="task-name">蛋白质自主进化</div><div class="task-domain">领域：生命科学</div></div></div>
+                      <span class="task-live">进行中</span>
                     </div>
-                    <span class="task-live">RUNNING</span>
+                    <div class="task-progress"><span class="tp-label">最新进展</span><span class="tp-text">第 12 轮定向进化 · 结合亲和力 ↑ 2.4×</span></div>
+                    <div class="task-stats">
+                      <div class="task-stat"><span>超算</span><b>10P</b></div>
+                      <div class="task-stat"><span>智算</span><b>100P</b></div>
+                      <div class="task-stat"><span>数据</span><b>5TB</b></div>
+                      <div class="task-stat"><span>运行</span><b>20H</b></div>
+                    </div>
                   </div>
-                  <div class="task-progress"><span class="tp-label">最新进展</span><span class="tp-text">第 12 轮定向进化 · 结合亲和力 ↑ 2.4×</span></div>
-                  <div class="task-stats">
-                    <div class="task-stat"><span>超算</span><b>10P</b></div>
-                    <div class="task-stat"><span>智算</span><b>100P</b></div>
-                    <div class="task-stat"><span>数据</span><b>5TB</b></div>
-                    <div class="task-stat"><span>运行时间</span><b>20H</b></div>
+                  <div class="task-monitor">
+                    <span class="mon-label">远程监控</span>
+                    <span class="mon-rec">REC</span>
+                    <span class="mon-ph">信号接入中…</span>
                   </div>
-                </div>
-                <div class="task-monitor">
-                  <span class="mon-label">远程监控</span>
-                  <span class="mon-rec">REC</span>
-                  <span class="mon-ph">信号接入中…</span>
-                </div>
-              </article>
+                </article>
 
-              <article class="task-item" style="--accent: var(--cyan);" data-task="电催化">
-                <div class="task-info">
-                  <div class="task-head">
-                    <div class="task-title">
-                      <div><div class="task-name">电催化</div><div class="task-domain">领域：化学</div></div>
+                <article class="task-item running" style="--accent: #57b8c4;" data-task="电催化">
+                  <div class="task-info">
+                    <div class="task-head">
+                      <div class="task-title"><div><div class="task-name">电催化</div><div class="task-domain">领域：化学</div></div></div>
+                      <span class="task-live">进行中</span>
                     </div>
-                    <span class="task-live">RUNNING</span>
+                    <div class="task-progress"><span class="tp-label">最新进展</span><span class="tp-text">OER 过电位降至 231 mV</span></div>
+                    <div class="task-stats">
+                      <div class="task-stat"><span>超算</span><b>20P</b></div>
+                      <div class="task-stat"><span>智算</span><b>500P</b></div>
+                      <div class="task-stat"><span>数据</span><b>500GB</b></div>
+                      <div class="task-stat"><span>运行</span><b>10H</b></div>
+                    </div>
                   </div>
-                  <div class="task-progress"><span class="tp-label">最新进展</span><span class="tp-text">OER 过电位降至 231 mV</span></div>
-                  <div class="task-stats">
-                    <div class="task-stat"><span>超算</span><b>20P</b></div>
-                    <div class="task-stat"><span>智算</span><b>500P</b></div>
-                    <div class="task-stat"><span>数据</span><b>500GB</b></div>
-                    <div class="task-stat"><span>运行时间</span><b>10H</b></div>
+                  <div class="task-monitor">
+                    <span class="mon-label">远程监控</span>
+                    <span class="mon-rec">REC</span>
+                    <span class="mon-ph">信号接入中…</span>
                   </div>
-                </div>
-                <div class="task-monitor">
-                  <span class="mon-label">远程监控</span>
-                  <span class="mon-rec">REC</span>
-                  <span class="mon-ph">信号接入中…</span>
-                </div>
-              </article>
+                </article>
 
-              <article class="task-item" style="--accent: var(--violet);" data-task="光刻胶">
-                <div class="task-info">
-                  <div class="task-head">
-                    <div class="task-title">
-                      <div><div class="task-name">光刻胶</div><div class="task-domain">领域：材料科学</div></div>
+                <article class="task-item running" style="--accent: #9385d6;" data-task="光刻胶">
+                  <div class="task-info">
+                    <div class="task-head">
+                      <div class="task-title"><div><div class="task-name">光刻胶</div><div class="task-domain">领域：材料科学</div></div></div>
+                      <span class="task-live">进行中</span>
                     </div>
-                    <span class="task-live">RUNNING</span>
+                    <div class="task-progress"><span class="tp-label">最新进展</span><span class="tp-text">光敏树脂配方迭代 v9</span></div>
+                    <div class="task-stats">
+                      <div class="task-stat"><span>超算</span><b>15P</b></div>
+                      <div class="task-stat"><span>智算</span><b>320P</b></div>
+                      <div class="task-stat"><span>数据</span><b>1.2TB</b></div>
+                      <div class="task-stat"><span>运行</span><b>6H</b></div>
+                    </div>
                   </div>
-                  <div class="task-progress"><span class="tp-label">最新进展</span><span class="tp-text">光敏树脂配方迭代 v9</span></div>
-                  <div class="task-stats">
-                    <div class="task-stat"><span>超算</span><b>15P</b></div>
-                    <div class="task-stat"><span>智算</span><b>320P</b></div>
-                    <div class="task-stat"><span>数据</span><b>1.2TB</b></div>
-                    <div class="task-stat"><span>运行时间</span><b>6H</b></div>
+                  <div class="task-monitor">
+                    <span class="mon-label">远程监控</span>
+                    <span class="mon-rec">REC</span>
+                    <span class="mon-ph">信号接入中…</span>
                   </div>
-                </div>
-                <div class="task-monitor">
-                  <span class="mon-label">远程监控</span>
-                  <span class="mon-rec">REC</span>
-                  <span class="mon-ph">信号接入中…</span>
-                </div>
-              </article>
+                </article>
+
+                <article class="task-item done" style="--accent: var(--success);">
+                  <div class="task-info">
+                    <div class="task-head">
+                      <div class="task-title"><div><div class="task-name">药物筛选智能体 MolClaw</div><div class="task-domain">联合北京大学</div></div></div>
+                      <span class="task-live done">已完成</span>
+                    </div>
+                    <div class="task-progress"><span class="tp-label">成果</span><span class="tp-text">端到端自动化药物分子评价、筛选及优化</span></div>
+                  </div>
+                  <div class="task-monitor result">
+                    <span class="mon-label">成果配图</span>
+                    <span class="mon-ph">IMG</span>
+                  </div>
+                </article>
+
+                <article class="task-item done" style="--accent: var(--success);">
+                  <div class="task-info">
+                    <div class="task-head">
+                      <div class="task-title"><div><div class="task-name">生物多智能体 OriGene “元生”</div><div class="task-domain">联合临港实验室</div></div></div>
+                      <span class="task-live done">已完成</span>
+                    </div>
+                    <div class="task-progress"><span class="tp-label">成果</span><span class="tp-text">超越闭源模型，可发现原创靶标</span></div>
+                  </div>
+                  <div class="task-monitor result">
+                    <span class="mon-label">成果配图</span>
+                    <span class="mon-ph">IMG</span>
+                  </div>
+                </article>
+
+                <article class="task-item done" style="--accent: var(--success);">
+                  <div class="task-info">
+                    <div class="task-head">
+                      <div class="task-title"><div><div class="task-name">储能材料和电网跨尺度优化</div><div class="task-domain">联合中海储能、石油大学</div></div></div>
+                      <span class="task-live done">已完成</span>
+                    </div>
+                    <div class="task-progress"><span class="tp-label">成果</span><span class="tp-text">完成液流电池示范项目，已部署应用</span></div>
+                  </div>
+                  <div class="task-monitor result">
+                    <span class="mon-label">成果配图</span>
+                    <span class="mon-ph">IMG</span>
+                  </div>
+                </article>
+
+                <article class="task-item done" style="--accent: var(--success);">
+                  <div class="task-info">
+                    <div class="task-head">
+                      <div class="task-title"><div><div class="task-name">超大规模无缺陷中性原子量子阵列原创算法</div><div class="task-domain">联合合肥实验室</div></div></div>
+                      <span class="task-live done">已完成</span>
+                    </div>
+                    <div class="task-progress"><span class="tp-label">成果</span><span class="tp-text">世界首个常数时间原子排布</span></div>
+                  </div>
+                  <div class="task-monitor result">
+                    <span class="mon-label">成果配图</span>
+                    <span class="mon-ph">IMG</span>
+                  </div>
+                </article>
+
+                <article class="task-item done" style="--accent: var(--success);">
+                  <div class="task-info">
+                    <div class="task-head">
+                      <div class="task-title"><div><div class="task-name">同震破裂过程分析智能体</div><div class="task-domain">联合国家地震局</div></div></div>
+                      <span class="task-live done">已完成</span>
+                    </div>
+                    <div class="task-progress"><span class="tp-label">成果</span><span class="tp-text">分析效率提升一倍以上</span></div>
+                  </div>
+                  <div class="task-monitor result">
+                    <span class="mon-label">成果配图</span>
+                    <span class="mon-ph">IMG</span>
+                  </div>
+                </article>
+              </div>
             </div>
           </section>
         </aside>
@@ -3115,19 +3251,15 @@
       };
 
       const steps = [
-        { t: "用户需求", s: "科研问题理解 · 任务输入", c: "var(--blue)",   a: 90,
-          icon: '<path d="M5 5h13v9H8l-3 3.5Z"/><path d="M8 8.5h7M8 11.5h4.5"/>' },
-        { t: "科学假设", s: "假设生成 · 文献推理",      c: "var(--green)",  a: 38.57,
-          icon: '<path d="M9.5 18h5M10.5 21h3"/><path d="M12 3a6 6 0 0 1 3.8 10.7c-.7.6-.9 1-.9 2.3H9.1c0-1.3-.2-1.7-.9-2.3A6 6 0 0 1 12 3Z"/>' },
-        { t: "实验方案", s: "方案生成 · 条件优化",      c: "var(--cyan)",   a: -12.86,
+        { t: "实验方案设计", s: "需求解析 · 方案择优", c: "var(--blue)",   a: 90,
           icon: '<path d="M5 4h14v16H5Z"/><path d="M8.5 8.5h7M8.5 12h7M8.5 15.5h4.5"/>' },
-        { t: "干实验验证", s: "仿真计算 · 建模推演",    c: "var(--gold)",   a: -64.29,
+        { t: "实验任务编排", s: "资源调度 · 任务编排", c: "var(--green)",  a: 18,
+          icon: '<circle cx="6" cy="7" r="2"/><circle cx="6" cy="17" r="2"/><circle cx="18" cy="12" r="2"/><path d="M8 7.7l8 3.4M8 16.3l8-3.4"/>' },
+        { t: "干实验验证", s: "模型推理 · 数值模拟",   c: "var(--gold)",   a: -54,
           icon: '<rect x="3" y="5" width="18" height="12" rx="1"/><path d="M7.5 21h9M12 17v4"/><path d="M6.5 12l2.5-3 2 2 3-4.5"/>' },
-        { t: "湿实验验证", s: "真实实验 · 自主执行",    c: "var(--orange)", a: -115.71,
+        { t: "湿实验验证", s: "自主实验 · 实测回流",   c: "var(--orange)", a: -126,
           icon: '<path d="M9 3v6L4.3 17.2A2 2 0 0 0 6 20.2h12a2 2 0 0 0 1.7-3L15 9V3"/><path d="M8 3h8M7.5 14h9"/>' },
-        { t: "结果分析", s: "结果解析 · 证据沉淀",      c: "var(--teal)",  a: -167.14,
-          icon: '<path d="M4 19V5M4 19h16"/><path d="M7.5 15l3-4 3 2 4-7"/>' },
-        { t: "迭代优化", s: "多轮验证 · 策略优化",      c: "var(--violet)", a: -218.57,
+        { t: "迭代优化", s: "归因分析 · 策略进化",     c: "var(--violet)", a: -198,
           icon: '<circle cx="12" cy="12" r="6.5"/><circle cx="12" cy="12" r="2"/><path d="M12 5.5v2M18.5 12h-2M12 18.5v-2M5.5 12h2"/>' },
       ];
       const nodeEls = [];
@@ -3153,40 +3285,53 @@
       const ambLabels = [...document.querySelectorAll(".resource-label")];
       // 每个环节联动的算力/任务（当前环节转到最前端时触发脉冲）
       const LINK = [
-        { load: [],     task: [] },     // 用户需求
-        { load: [0],    task: [] },     // 科学假设 · 智算
-        { load: [0, 1], task: [1] },    // 实验方案 · 算力 · 电催化
-        { load: [0, 1], task: [1] },    // 干实验验证 · 算力 · 电催化
-        { load: [0, 1], task: [0, 1] }, // 湿实验验证 · 算力 · 两任务
-        { load: [0],    task: [0] },    // 结果分析 · 智算 · 蛋白质
-        { load: [],     task: [] },     // 迭代优化
+        { load: [0],    task: [] },     // 实验方案设计 · 智算
+        { load: [],     task: [] },     // 实验任务编排
+        { load: [0, 1], task: [1, 2] }, // 干实验验证 · 算力 · 电催化/光刻胶
+        { load: [],     task: [0] },    // 湿实验验证 · 蛋白质
+        { load: [0],    task: [0, 2] }, // 迭代优化 · 智算
       ];
       const pulse = (el) => { if (!el) return; el.classList.add("link-on"); setTimeout(() => el.classList.remove("link-on"), 1300); };
+      // 左栏"外部资源与能力接入"模块，供步骤联动高亮
+      const resItems = [...document.querySelectorAll(".resource-item")];
+      // 每步用到的左栏资源类目（步骤激活时对应模块高亮一下）：
+      // 0科学数据 1智算算力 2超算算力 3科学模型 4科学工具 5AI4S平台 6自主实验室
+      const RES_LINK = [
+        [0, 3, 5],     // 实验方案设计 · 数据/模型/AI4S平台
+        [1, 3],        // 实验任务编排 · 智算/模型
+        [1, 2, 3, 4],  // 干实验验证 · 算力/模型/工具
+        [4, 6],        // 湿实验验证 · 工具/自主实验室
+        [0, 3],        // 迭代优化 · 数据/模型
+      ];
+      const pulseRes = (el) => { if (!el) return; el.classList.add("res-lit"); setTimeout(() => el.classList.remove("res-lit"), 1600); };
 
       // 每步：抽象配图 fig + 说明 tagline + 能力标签 tags + 流程示意 flow（随接力切换）
       // flow：每列一项；同列多项 = 并行分支；最后一列自动高亮为产出
       const DETAIL = [
-        { tagline: "把科学家的真实诉求解析为机器可执行的科研任务，锚定目标与边界。", tags: ["问题解析", "目标拆解", "约束识别", "意图对齐"],
-          fig: '<rect x="12" y="24" width="30" height="24" rx="4"/><path d="M18 32h18M18 38h11"/><path d="M42 40h15" class="flow"/><path d="M53 35l7 5-7 5"/><circle cx="72" cy="52" r="11"/><circle cx="72" cy="52" r="3.4" class="dot pulse"/>',
-          flow: [["科研问题"], ["意图解析"], ["目标拆解", "约束识别"], ["任务定义"]] },
-        { tagline: "融合海量文献与知识图谱，自动生成可检验、可排序的科学假设。", tags: ["文献挖掘", "知识推理", "假设排序", "新颖性评估"],
-          fig: '<path d="M26 48h14"/><path d="M40 48c9 0 7-24 22-24" class="flow"/><path d="M40 48h22" class="flow"/><path d="M40 48c9 0 7 24 22 24" class="flow"/><circle cx="20" cy="48" r="6"/><circle cx="20" cy="48" r="2.6" class="dot pulse"/><circle cx="68" cy="24" r="6"/><circle cx="70" cy="48" r="6"/><circle cx="68" cy="72" r="6"/>',
-          flow: [["蛋白质", "化学", "物理"], ["文献推理"], ["假设 H1", "假设 H2", "假设 H3"], ["排序优选"]] },
-        { tagline: "面向选定假设设计可执行实验方案，并在参数空间中寻优。", tags: ["方案生成", "参数寻优", "资源估算", "风险预判"],
+        { tagline: "解析用户真实需求并深度研究，生成候选方案、择优形成可执行实验方案。",
           fig: '<circle cx="26" cy="28" r="2.6"/><circle cx="48" cy="28" r="2.6"/><circle cx="70" cy="28" r="2.6"/><circle cx="26" cy="48" r="2.6"/><circle cx="48" cy="48" r="2.6"/><circle cx="70" cy="48" r="2.6"/><circle cx="26" cy="68" r="2.6"/><circle cx="48" cy="68" r="2.6"/><circle cx="70" cy="68" r="2.6"/><polyline points="26,68 48,48 70,48 70,28" class="flow"/>',
-          flow: [["科学假设"], ["方案 A", "方案 B", "方案 C"], ["寻优对比"], ["实验方案"]] },
-        { tagline: "以高精度仿真与建模在计算侧快速验证方案可行性、预筛结果。", tags: ["多尺度建模", "DFT / MD", "代理模型", "结果预筛"],
+          flow: [["用户需求"], ["深度研究"], ["生成实验方案候选"], ["优劣势对比"], ["实验方案"]],
+          res: ["磐石科研智能平台", "爱赛思AI4S社区", "书生科学基础模型", "磐石科学大模型"] },
+
+        { tagline: "将实验方案拆解为资源调度与任务编排，产出可执行的实验脚本。",
+          fig: '<rect x="14" y="20" width="20" height="12" rx="2"/><rect x="14" y="42" width="20" height="12" rx="2"/><rect x="14" y="64" width="20" height="12" rx="2"/><path d="M34 26h14v22h14" class="flow"/><path d="M34 48h14" class="flow"/><path d="M34 70h14v-22" class="flow"/><rect x="62" y="42" width="18" height="12" rx="2"/><circle cx="71" cy="48" r="2.4" class="dot pulse"/>',
+          flow: [["实验方案"], ["资源调度"], ["任务编排"], ["实验脚本"]],
+          res: ["书生科学基础模型", "SCP科学上下文协议", "DeepLink超智融合算力平台"] },
+
+        { tagline: "以模型推理与数值模拟在计算侧并行验证，交叉比对快速预筛可行结果。",
           fig: '<path d="M14 36 C 26 22, 38 50, 50 36 S 74 22, 82 36" opacity=".8"/><path d="M14 48 C 26 34, 38 62, 50 48 S 74 34, 82 48" class="flow"/><path d="M14 60 C 26 46, 38 74, 50 60 S 74 46, 82 60" opacity=".55"/>',
-          flow: [["结构建模"], ["DFT 计算", "MD 模拟"], ["代理模型"], ["结果预筛"]] },
-        { tagline: "调度自主实验室在真实物理世界执行实验并在线采集数据。", tags: ["自动化编排", "机器人执行", "在线表征", "实时监控"],
+          flow: [["实验脚本"], ["任务分解"], ["模型推理", "数值模拟"], ["交叉验证"], ["实验结果"]],
+          res: ["磐石科学大模型", "DFT第一性原理计算", "AI代理模型", "AlphaFold 3"] },
+
+        { tagline: "调度自主实验室在真实物理世界执行实验，在线采集并回流实测结果。",
           fig: '<path d="M21 22h14M24 22v9l-9 20a3 3 0 0 0 2.8 4.2h18.4a3 3 0 0 0 2.8-4.2l-9-20V22"/><path d="M17 47h22"/><path d="M59 22h14M62 22v9l-9 20a3 3 0 0 0 2.8 4.2h18.4a3 3 0 0 0 2.8-4.2l-9-20V22"/><path d="M55 47h22"/><path d="M41 52h14" class="flow"/><circle cx="66" cy="43" r="2.6" class="dot pulse"/>',
-          flow: [["实验编排"], ["机器人执行"], ["在线表征"], ["数据采集"]] },
-        { tagline: "解析干湿实验数据，多源比对、检验显著性并沉淀为可复用证据。", tags: ["数据解析", "多源比对", "显著性检验", "知识入库"],
-          fig: '<path d="M22 18V72H80"/><polyline points="26,62 40,48 52,53 66,32 76,26" class="flow"/><circle class="dot" cx="26" cy="62" r="2.6"/><circle class="dot" cx="40" cy="48" r="2.6"/><circle class="dot" cx="52" cy="53" r="2.6"/><circle class="dot pulse" cx="66" cy="32" r="2.6"/><circle class="dot" cx="76" cy="26" r="2.6"/>',
-          flow: [["多源数据"], ["解析比对"], ["显著性检验"], ["证据入库"]] },
-        { tagline: "基于反馈闭环多轮迭代、动态更新策略，持续逼近最优解。", slogan: "科研轨迹数据推动平台进化", tags: ["反馈闭环", "策略更新", "贝叶斯优化", "收敛判定"],
+          flow: [["实验脚本"], ["任务分解"], ["动作编排"], ["实验结果"]],
+          res: ["SCP科学上下文协议", "中科大机器化学家", "具身自主实验", "镁伽科技"] },
+
+        { tagline: "对实验结果归因分析，更新知识、迭代模型，驱动新一轮实验方案。", slogan: "科研轨迹数据推动平台进化",
           fig: '<path d="M48 26 A22 22 0 0 1 70 48" class="flow"/><path d="M62 42l9 6-4 9"/><path d="M48 70 A22 22 0 0 1 26 48" class="flow"/><path d="M34 54l-9-6 4-9"/><circle cx="48" cy="48" r="9"/><circle cx="48" cy="48" r="3" class="dot pulse"/>',
-          flow: [["结果反馈"], ["策略更新"], ["方案进化", "平台进化"], ["数据飞轮"]] },
+          flow: [["实验结果"], ["归因分析"], ["知识更新", "模型迭代"], ["新实验方案"]],
+          res: ["书生科学基础模型", "磐石科学大模型"] },
       ];
       const ndEl = document.getElementById("nodeDetail");
       const ND_ARROW = '<span class="nd-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h13M13 6l6 6-6 6"/></svg></span>';
@@ -3194,7 +3339,6 @@
         if (!ndEl) return;
         const st = steps[idx]; if (!st) return;
         const d = DETAIL[idx] || {};
-        const tags = (d.tags || []).map((t) => '<span class="nd-tag">' + t + "</span>").join("");
         const lead = d.slogan
           ? '<div class="nd-slogan">' + d.slogan + "</div>"
           : '<p class="nd-desc">' + (d.tagline || "") + "</p>";
@@ -3203,16 +3347,19 @@
           if (col.length > 1) {
             return '<div class="nd-col multi">' + col.map((b) => '<span class="nd-mini">' + b + "</span>").join("") + "</div>";
           }
-          const key = ci === cols.length - 1 ? " key" : "";
-          return '<div class="nd-col"><span class="nd-box' + key + '">' + col[0] + "</span></div>";
+          const cls = ci === 0 ? " in" : (ci === cols.length - 1 ? " key" : "");
+          return '<div class="nd-col"><span class="nd-box' + cls + '">' + col[0] + "</span></div>";
         }).join(ND_ARROW);
+        const res = (d.res || []).map((r) =>
+          '<span class="nd-res"><span class="nd-res-logo">LOGO</span><span class="nd-res-name">' + r + "</span></span>"
+        ).join("");
         ndEl.innerHTML =
           '<div class="nd-card" style="--dc:' + st.c + '">' +
             '<div class="nd-figure"><svg class="nd-fig-svg" viewBox="0 0 96 96" aria-hidden="true">' + (d.fig || "") + "</svg></div>" +
             '<div class="nd-body">' +
-              lead +
-              '<div class="nd-tags">' + tags + "</div>" +
+              '<div class="nd-head"><span class="nd-title">' + st.t + "</span>" + lead + "</div>" +
               '<div class="nd-flow">' + flow + "</div>" +
+              '<div class="nd-res-list">' + res + "</div>" +
             "</div>" +
           "</div>";
       }
@@ -3232,6 +3379,7 @@
         const lk = LINK[idx] || {};
         (lk.load || []).forEach((i) => pulse(loadCards[i]));
         (lk.task || []).forEach((i) => pulse(taskItems[i]));
+        (RES_LINK[idx] || []).forEach((i) => pulseRes(resItems[i]));
         ambLabels.forEach((s) => { s.classList.add("beat"); setTimeout(() => s.classList.remove("beat"), 520); });
         renderDetail(idx);
       };
@@ -3243,46 +3391,59 @@
       };
     })();
 
-    /* ===== 平台运行情况：算力负载节点阵列（点亮比例=负载，随机 flash 模拟活动）===== */
-    (function buildLoadGrids() {
-      document.querySelectorAll(".load-card").forEach((card) => {
-        const grid = card.querySelector(".node-grid");
-        if (!grid) return;
-        const cols = parseInt(grid.dataset.cols, 10) || 16;
-        const rows = parseInt(grid.dataset.rows, 10) || 4;
-        const total = cols * rows;
-        const pct = parseFloat(card.dataset.load) || 0;
-        const lit = Math.round((pct / 100) * total);
-        for (let i = 0; i < total; i++) {
-          const cell = document.createElement("div");
-          cell.className = "node-cell" + (i >= total - lit ? " use" : "");
-          grid.appendChild(cell);
-        }
+    /* ===== 平台用户：词云（字号按权重分级，错落浮动，数组可扩展）===== */
+    (function buildUserCloud() {
+      const cloud = document.getElementById("userCloud");
+      if (!cloud) return;
+      // 需要加密时往这里加 { name, w } 即可（w: 3 大 / 2 中 / 1 小）
+      const USERS = [
+        { name: "北京大学", w: 3 },
+        { name: "苏州国家实验室", w: 3 },
+        { name: "临港国家实验室", w: 2 },
+        { name: "中国科学院物理研究所", w: 2 },
+        { name: "国家地震局", w: 1 },
+        { name: "中海储能", w: 1 },
+      ];
+      const SIZE = { 3: 20, 2: 16, 1: 13 };
+      const COLOR = { 3: "var(--vermilion-7)", 2: "var(--vermilion-6)", 1: "var(--ink-mute)" };
+      // 相对位置（%）错落分布；长名放中间列避免出血
+      const POS = [[50, 30], [24, 58], [76, 56], [50, 80], [26, 22], [76, 24]];
+      cloud.innerHTML = "";
+      USERS.forEach((u, i) => {
+        const el = document.createElement("span");
+        el.className = "user-word";
+        const p = POS[i % POS.length];
+        el.style.left = p[0] + "%";
+        el.style.top = p[1] + "%";
+        el.style.setProperty("--fz", (SIZE[u.w] || 14) + "px");
+        el.style.setProperty("--uc", COLOR[u.w] || "var(--ink-soft)");
+        el.style.setProperty("--dur", (6.4 + i * 0.5).toFixed(1) + "s");
+        el.style.setProperty("--delay", (-i * 0.9).toFixed(1) + "s");
+        el.textContent = u.name;
+        cloud.appendChild(el);
       });
-      setInterval(() => {
-        document.querySelectorAll(".load-card").forEach((card) => {
-          const cells = card.querySelectorAll(".node-cell.use");
-          if (!cells.length) return;
-          const n = Math.min(cells.length, 2 + Math.floor(Math.random() * 4));
-          const picked = new Set();
-          while (picked.size < n) picked.add(Math.floor(Math.random() * cells.length));
-          picked.forEach((i) => {
-            cells[i].classList.add("flash");
-            setTimeout(() => cells[i].classList.remove("flash"), 520);
-          });
-        });
-      }, 640);
+    })();
 
-      // 负载百分比在基准值上 ±3 轻微浮动
-      setInterval(() => {
-        document.querySelectorAll(".load-card").forEach((card) => {
-          const util = card.querySelector(".cluster-stat .util");
-          if (!util) return;
-          const base = parseFloat(card.dataset.load) || 0;
-          const v = base + Math.round((Math.random() - 0.5) * 6);
-          util.textContent = Math.max(0, Math.min(100, v)) + "%";
-        });
-      }, 2200);
+    /* ===== 平台运行情况：算力负载柱状图（柱高随负载基准同步波动）===== */
+    (function animateLoadBars() {
+      const cards = [...document.querySelectorAll(".load-card")];
+      if (!cards.length) return;
+      const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+      const reduce = matchMedia("(prefers-reduced-motion:reduce)").matches;
+      cards.forEach((card) => {
+        const bars = [...card.querySelectorAll(".load-bars span")];
+        const util = card.querySelector(".cluster-stat .util");
+        const base = parseFloat(card.dataset.load) || 60;
+        const setBars = () => bars.forEach((b) =>
+          b.style.setProperty("--h", clamp(base + (Math.random() - 0.5) * 46, 12, 100).toFixed(0) + "%"));
+        setBars();
+        if (reduce) return;
+        // 让开场数字滚动（bootCountUp）先跑完，再接管柱高与数值，两者同步跳动
+        setTimeout(() => setInterval(() => {
+          setBars();
+          if (util) util.textContent = clamp(Math.round(base + (Math.random() - 0.5) * 6), 0, 100) + "%";
+        }, 820 + Math.random() * 260), 1500);
+      });
     })();
 
     /* ===== 24h 调用量：实时流动曲线（随机游走 · 持续左移）===== */
@@ -3382,82 +3543,30 @@
     })();
 
     /* ===== 实时任务：最新进展滚动 + 位置接力上顶（底部卡上升到顶部）===== */
-    (function taskFeed(){
-      const list = document.querySelector(".task-list");
-      if (!list) return;
-      const items = [...list.querySelectorAll(".task-item")];
-      const N = items.length;
-      if (N < 2) return;
-
-      // 每个任务的最新进展词条池（轮播时逐条推进）
-      const POOL = {
-        "蛋白质自主进化": [
-          "第 12 轮定向进化 · 结合亲和力 ↑ 2.4×",
-          "结构预测收敛 · pLDDT 92.6",
-          "候选序列 3200 → 76 精筛完成",
-          "湿实验验证批次 #08 数据回流",
-        ],
-        "电催化": [
-          "OER 过电位降至 231 mV",
-          "DFT 遍历中间体 512 种",
-          "活性位点重构 · d 带中心 -1.7 eV",
-          "循环稳定性测试 1200h 通过",
-        ],
-        "光刻胶": [
-          "光敏树脂配方迭代 v9",
-          "EUV 灵敏度 28 mJ/cm² 达标",
-          "线边粗糙度 LER 降至 1.6 nm",
-          "13nm 半密集线条成形验证",
-        ],
-      };
-      const state = items.map((el) => {
-        const name = el.dataset.task || "";
-        const pool = POOL[name] || [el.querySelector(".tp-text")?.textContent || ""];
-        // 初始文案已在 HTML 中给出，进度指针指向下一条
-        const cur = el.querySelector(".tp-text")?.textContent || "";
-        let p = pool.indexOf(cur);
-        return { el, pool, p: p < 0 ? 0 : p };
-      });
-
-      // order[slot] = 该槽位当前显示的任务索引；底部槽位每拍上顶到顶部
-      let order = items.map((_, i) => i);
-      const GAP = 10;
-
-      function slotHeight(){
-        return (list.clientHeight - GAP * (N - 1)) / N;
-      }
-      function place(animate){
-        const h = slotHeight();
-        if (h <= 0) return;
-        list.classList.add("feed");
-        order.forEach((itemIdx, slot) => {
-          const el = items[itemIdx];
-          el.style.height = h.toFixed(1) + "px";
-          if (!animate) el.style.transition = "none";
-          el.style.transform = "translateY(" + (slot * (h + GAP)).toFixed(1) + "px)";
-          if (!animate) { void el.offsetWidth; el.style.transition = ""; }
-        });
-      }
-
-      function advance(st){
-        st.p = (st.p + 1) % st.pool.length;
-        const txt = st.el.querySelector(".tp-text");
-        if (txt) txt.textContent = st.pool[st.p];
-        st.el.classList.add("bumped");
-        setTimeout(() => st.el.classList.remove("bumped"), 620);
-      }
-
-      // 初始铺位（不动画），随后每拍：底部卡上顶到顶，并刷新其最新进展
-      requestAnimationFrame(() => requestAnimationFrame(() => place(false)));
-      addEventListener("resize", () => place(false));
-
+    /* ===== 科研任务：竖向自动滚动（进行中 + 已完成 循环展示）===== */
+    (function buildTaskMarquee(){
+      const track = document.getElementById("taskTrack");
+      if (!track) return;
+      const cards = [...track.children];
+      if (!cards.length) return;
       const reduce = matchMedia("(prefers-reduced-motion:reduce)").matches;
-      if (reduce) return;
+      if (reduce) return;   // 减动效：静态展示，不滚动
+      // 克隆一份接在后面，配合 CSS translateY(-50%) 实现无缝循环
+      cards.forEach((c) => track.appendChild(c.cloneNode(true)));
+      const dur = Math.max(30, cards.length * 6);   // 卡越多滚越慢，节奏一致
+      track.style.setProperty("--dur", dur + "s");
+      track.classList.add("rolling");
+
+      // 任务卡时不时轮流点亮一下（含克隆卡，避免只亮上半区）
+      const allCards = [...track.children];
+      let fi = Math.floor(allCards.length / 2);   // 从中段起，避开开场
       setInterval(() => {
-        order.unshift(order.pop());   // 底部槽位任务移到顶部槽位
-        place(true);
-        advance(state[order[0]]);     // 刷新刚上顶那张卡的最新进展
-      }, 3400);
+        const el = allCards[fi % allCards.length];
+        fi += 1;
+        if (!el) return;
+        el.classList.add("link-on");
+        setTimeout(() => el.classList.remove("link-on"), 1100);
+      }, 2200);
     })();
 
     window.addEventListener("resize", fitScreen);
@@ -3503,76 +3612,50 @@
       group.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(p),
         new THREE.LineBasicMaterial({ color:C.ruleSoft, transparent:true, opacity:.32 }))); }
 
-    // ===== core orb · scheme A · 灵动球体 =====
-    const ORB = 5.0, ORB_Y = 0;   // 球心落在地面 y=0，赤道正好与地面/涟漪重合
-    const orbGroupA = new THREE.Group(); orbGroupA.position.set(0, ORB_Y, 0); group.add(orbGroupA);
-    const orbLon = new LineMaterial({ color:C.v6, linewidth:1.5, transparent:true, opacity:.6 });
-    const orbLat = new LineMaterial({ color:C.v5, linewidth:1.3, transparent:true, opacity:.45 });
-    const fatLoop = (pts, mat) => { const arr=[]; pts.forEach(v=>arr.push(v.x,v.y,v.z));
-      const g=new LineGeometry(); g.setPositions(arr); return new Line2(g, mat); };
-    for(let k=0;k<6;k++){ const p=[];
-      for(let i=0;i<=72;i++){ const a=i/72*Math.PI*2; p.push(new THREE.Vector3(ORB*Math.sin(a),ORB*Math.cos(a),0)); }
-      const L=fatLoop(p, orbLon); L.rotation.y=k*Math.PI/6; orbGroupA.add(L); }
-    for(let k=-2;k<=2;k++){ const phi=k*0.34, r=ORB*Math.cos(phi), y=ORB*Math.sin(phi), p=[];
-      for(let i=0;i<=64;i++){ const a=i/64*Math.PI*2; p.push(new THREE.Vector3(r*Math.cos(a),y,r*Math.sin(a))); }
-      orbGroupA.add(fatLoop(p, orbLat)); }
-    const coreGroup = new THREE.Group(); orbGroupA.add(coreGroup);
-    const orbBody = new THREE.Mesh(new THREE.SphereGeometry(ORB*0.95,48,40),
-      new THREE.MeshBasicMaterial({ color:0x12151c }));
-    orbGroupA.add(orbBody);
-    const innerRings = [[0,0],[Math.PI/3,Math.PI/4],[-Math.PI/3.4,-Math.PI/5]].map(([rx,rz],idx)=>{
-      const rr = ORB*(0.52 - idx*0.08), p=[];
-      for(let i=0;i<=72;i++){ const a=i/72*Math.PI*2; p.push(new THREE.Vector3(rr*Math.cos(a),0,rr*Math.sin(a))); }
-      const L=new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(p),
-        new THREE.LineBasicMaterial({ color:idx===0?C.v6:C.v5, transparent:true, opacity:.7-idx*.08, depthTest:false }));
-      L.rotation.set(rx,0,rz); L.renderOrder=2; coreGroup.add(L);
-      return { L, sp:(0.5+idx*0.45)*(idx%2?-1:1) };
-    });
-    const innerParts = [0,1,2].map(k=>{
-      const m=new THREE.Mesh(new THREE.SphereGeometry(0.085,10,10),
-        new THREE.MeshBasicMaterial({ color:C.v7, transparent:true, opacity:.95, blending:THREE.AdditiveBlending, depthWrite:false, depthTest:false }));
-      m.renderOrder=3; coreGroup.add(m);
-      return { m, r:ORB*(0.40+0.05*k), off:k*2.1, sp:0.9+0.35*k, tilt:k*Math.PI/3 };
-    });
-    const coreBall = new THREE.Mesh(new THREE.SphereGeometry(ORB*0.24, 48, 36),
-      new THREE.ShaderMaterial({
-        depthTest:false,
-        uniforms:{ uHi:{ value:new THREE.Color(0xa0c2e8) }, uLo:{ value:new THREE.Color(0x1a2738) } },
-        vertexShader:`
-          varying vec3 vN; varying vec3 vView;
-          void main(){ vN=normalize(normalMatrix*normal);
-            vec4 mv=modelViewMatrix*vec4(position,1.0); vView=normalize(-mv.xyz);
-            gl_Position=projectionMatrix*mv; }`,
-        fragmentShader:`
-          varying vec3 vN; varying vec3 vView; uniform vec3 uHi,uLo;
-          void main(){
-            vec3 L=normalize(vec3(-0.4,0.7,0.6));
-            float diff=max(dot(vN,L),0.0);
-            float spec=pow(max(dot(reflect(-L,vN),vView),0.0),24.0);
-            float rim=pow(1.0-max(dot(vN,vView),0.0),3.0);
-            vec3 col=mix(uLo,uHi,diff*0.9)+spec*0.12+uHi*rim*0.28;
-            gl_FragColor=vec4(col,1.0); }`
-      }));
-    coreBall.renderOrder=1; coreGroup.add(coreBall);
-    const HALO_N = 420, haloPos = new Float32Array(HALO_N*3);
-    for(let i=0;i<HALO_N;i++){
-      const u=Math.random()*2-1, th=Math.random()*Math.PI*2, s=Math.sqrt(1-u*u);
-      const r=ORB*(1.18 + Math.random()*0.008);
-      haloPos[i*3]=r*s*Math.cos(th); haloPos[i*3+1]=r*u; haloPos[i*3+2]=r*s*Math.sin(th);
+    // ===== 中央：螺旋上升粒子（体现平台迭代进化）=====
+    const spiralGroup = new THREE.Group(); group.add(spiralGroup);
+    const SP_N = 260, SP_TURNS = 3.2, SP_H = 8.4, SP_R0 = 3.5, SP_R1 = 0.4;
+    const SP_BR = 0.66, SP_BG = 0.80, SP_BB = 0.94;   // 基色 ≈ #a8ccef
+    const spPos = new Float32Array(SP_N * 3);
+    const spCol = new Float32Array(SP_N * 3);
+    const spGeo = new THREE.BufferGeometry();
+    spGeo.setAttribute('position', new THREE.BufferAttribute(spPos, 3));
+    spGeo.setAttribute('color', new THREE.BufferAttribute(spCol, 3));
+    const spBase = [];
+    for (let i = 0; i < SP_N; i++) spBase.push({ f: i / SP_N, strand: i % 3, jit: 0.55 + 0.45 * ((i * 0.6180339) % 1) });
+    const spCanvas = document.createElement('canvas'); spCanvas.width = spCanvas.height = 64;
+    { const g = spCanvas.getContext('2d'), grd = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+      grd.addColorStop(0, 'rgba(255,255,255,1)'); grd.addColorStop(0.35, 'rgba(180,206,240,0.8)'); grd.addColorStop(1, 'rgba(180,206,240,0)');
+      g.fillStyle = grd; g.fillRect(0, 0, 64, 64); }
+    const spiral = new THREE.Points(spGeo, new THREE.PointsMaterial({
+      size: 0.36, map: new THREE.CanvasTexture(spCanvas), vertexColors: true,
+      transparent: true, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending, sizeAttenuation: true }));
+    spiral.renderOrder = 2; spiralGroup.add(spiral);
+    // 螺旋起点微光
+    const spCore = new THREE.Mesh(new THREE.SphereGeometry(0.5, 24, 18),
+      new THREE.MeshBasicMaterial({ color: 0xbcd6f2, transparent: true, opacity: .45, blending: THREE.AdditiveBlending, depthWrite: false, depthTest: false }));
+    spCore.position.y = 0.2; spCore.renderOrder = 1; spiralGroup.add(spCore);
+    function updateSpiral(t){
+      const spin = t * 0.5;
+      for (let i = 0; i < SP_N; i++){
+        const b = spBase[i];
+        const f = (b.f + t * 0.055) % 1;
+        const r = SP_R0 + (SP_R1 - SP_R0) * f;
+        const ang = f * SP_TURNS * 6.2831853 + b.strand * 2.0943951 + spin;
+        spPos[i * 3] = r * Math.cos(ang);
+        spPos[i * 3 + 1] = f * SP_H;
+        spPos[i * 3 + 2] = r * Math.sin(ang);
+        let a = Math.min(f / 0.10, (1 - f) / 0.18); a = a < 0 ? 0 : (a > 1 ? 1 : a); a *= b.jit;
+        spCol[i * 3] = SP_BR * a; spCol[i * 3 + 1] = SP_BG * a; spCol[i * 3 + 2] = SP_BB * a;
+      }
+      spGeo.attributes.position.needsUpdate = true;
+      spGeo.attributes.color.needsUpdate = true;
+      spCore.scale.setScalar(1 + 0.12 * Math.sin(t * 2.0));
     }
-    const haloGeo = new THREE.BufferGeometry();
-    haloGeo.setAttribute('position', new THREE.BufferAttribute(haloPos,3));
-    const pc=document.createElement('canvas'); pc.width=pc.height=64;
-    { const g=pc.getContext('2d'), grd=g.createRadialGradient(32,32,0,32,32,32);
-      grd.addColorStop(0,'rgba(180,206,240,0.9)'); grd.addColorStop(1,'rgba(180,206,240,0)');
-      g.fillStyle=grd; g.fillRect(0,0,64,64); }
-    const particles = new THREE.Points(haloGeo, new THREE.PointsMaterial({
-      size:0.26, map:new THREE.CanvasTexture(pc), color:0xa0c2e8,
-      transparent:true, opacity:.7, depthWrite:false, blending:THREE.AdditiveBlending, sizeAttenuation:true }));
-    orbGroupA.add(particles);
+    updateSpiral(0);
 
     // ground ripples
-    const RIP_N = 4, RIP_MIN = ORB*0.5, RIP_MAX = R, RIP_T = 3.4;
+    const RIP_N = 4, RIP_MIN = 1.6, RIP_MAX = R, RIP_T = 3.4;
     const ripPts = []; for(let i=0;i<=80;i++){ const a=i/80*Math.PI*2; ripPts.push(new THREE.Vector3(Math.cos(a),0,Math.sin(a))); }
     const ripGeo = new THREE.BufferGeometry().setFromPoints(ripPts);
     const ripples = [0,1,2,3].map(k=>{
@@ -3590,7 +3673,6 @@
       const w=ring.clientWidth||1, h=ring.clientHeight||1;
       renderer.setPixelRatio(Math.min(devicePixelRatio,2));
       renderer.setSize(w,h); labelRenderer.setSize(w,h);
-      orbLon.resolution.set(w,h); orbLat.resolution.set(w,h);
       camera.aspect = w / h;
       const halfV = THREE.MathUtils.degToRad(34)/2;
       const halfH = Math.atan(Math.tan(halfV)*camera.aspect);
@@ -3601,9 +3683,6 @@
     resize(); addEventListener('resize', resize);
 
     const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
-
-    // 固定方案 A（线框球）
-    orbGroupA.visible = true;
 
     // ---- 把 2D 卡片/标签按同一相机投影钉到 3D 环上（统一透视）----
     const TOP_OFFSET = -28;            // ring3d 相对 #loop 的 top 偏移
@@ -3620,7 +3699,7 @@
     const loopEl3d = document.getElementById('loop');
     const arcLayer3d = document.getElementById('arcLayer');
     const Nn = nodeCards.length;
-    const TRANS = ["提出", "生成与筛选", "实验编排", "实验执行", "结果反馈", "证据回流", "迭代优化"];
+    const TRANS = ["方案就绪", "脚本生成", "计算预筛", "实测回流", "迭代进化"];
     const arcEls3 = [], transEls3 = [];
     try {
       if (arcLayer3d && Nn) {
@@ -3698,14 +3777,14 @@
         if (holdT >= HOLD_TIME) { holding = false; endEvolve(); }
       } else {
         rawSlotProgress += dt / SLOT_TIME;
-        // 迭代优化到最前端 → 定格
-        if (!heldThisCycle && rawSlotProgress >= 6) {
-          rawSlotProgress = 6;
+        // 迭代优化（最后一个节点）到最前端 → 定格
+        if (!heldThisCycle && rawSlotProgress >= NSTEP - 1) {
+          rawSlotProgress = NSTEP - 1;
           holding = true; holdT = 0; heldThisCycle = true;
           startEvolve();
         }
         // 无缝回环
-        if (rawSlotProgress >= 7) { rawSlotProgress -= 7; heldThisCycle = false; }
+        if (rawSlotProgress >= NSTEP) { rawSlotProgress -= NSTEP; heldThisCycle = false; }
         // 用缓动函数把线性进度映射为弹性角度
         const slotIdx = Math.floor(rawSlotProgress);
         const slotFrac = rawSlotProgress - slotIdx;
@@ -3725,13 +3804,7 @@
       if(!reduce){
         tEl += dt;
         stepLoop(dt);
-        orbGroupA.rotation.y = -tEl * 0.42;
-        orbGroupA.scale.setScalar(1 + 0.03*Math.sin(tEl*1.1));
-        particles.rotation.y = tEl*2.1;
-        coreGroup.rotation.y = -tEl*0.8; coreGroup.rotation.x = Math.sin(tEl*0.3)*0.4;
-        innerRings.forEach(r=>{ r.L.rotation.y = tEl*r.sp*1.6; });
-        innerParts.forEach(p=>{ const a=tEl*p.sp+p.off, yb=p.r*Math.sin(a);
-          p.m.position.set(p.r*Math.cos(a), yb*Math.cos(p.tilt), yb*Math.sin(p.tilt)); });
+        updateSpiral(tEl);
         ripples.forEach(rp=>{ const t=(tEl/RIP_T+rp.off)%1, rad=RIP_MIN+(RIP_MAX-RIP_MIN)*t;
           rp.L.scale.set(rad,1,rad); rp.mat.opacity = .5*(1-t)*(1-t); });
       } else if (curFront < 0) {                       // 减动效：静态点亮首个节点
