@@ -421,14 +421,7 @@
     }
 
     .resource-item::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      background: var(--accent);
-      opacity: .78;
+      content: none;
     }
 
     /* 被中央步骤联动点亮 */
@@ -441,9 +434,7 @@
     }
 
     .resource-item.res-lit::before {
-      opacity: 1;
-      width: 3px;
-      box-shadow: 0 0 12px var(--accent);
+      content: none;
     }
 
     .resource-main {
@@ -511,6 +502,8 @@
       grid-template-columns: 1fr 1fr;
       gap: 5px;
       min-width: 0;
+      min-height: 30px;
+      align-items: stretch;
     }
 
     .resource-chip {
@@ -519,8 +512,8 @@
       gap: 6px;
       min-width: 0;
       max-width: 100%;
-      min-height: 22px;
-      padding: 2px 7px;
+      min-height: 30px;
+      padding: 3px 8px;
       border: 1px solid var(--rule-soft);
       border-radius: 2px;
       background: rgba(28, 31, 38, .55);
@@ -2287,14 +2280,18 @@
       min-width: 3px;
       height: var(--h);
       border-radius: 1.5px 1.5px 0 0;
+      border: 1px solid rgba(95, 129, 163, .36);
       background:
-        linear-gradient(180deg, var(--vermilion-7), var(--vermilion-5) 55%, var(--vermilion-4));
-      opacity: .9;
+        linear-gradient(180deg, rgba(85, 119, 153, .78), rgba(47, 72, 101, .86) 58%, rgba(32, 50, 76, .92));
+      box-shadow: inset 0 1px 0 rgba(174, 202, 232, .16);
+      opacity: .84;
       transition: height .7s var(--ease), opacity .7s var(--ease);
     }
 
     .load-card[data-cluster="hpc"] .load-bars span {
-      background: linear-gradient(180deg, var(--warning-deep), var(--warning) 55%, var(--warning-soft));
+      border-color: rgba(95, 129, 163, .36);
+      background:
+        linear-gradient(180deg, rgba(85, 119, 153, .78), rgba(47, 72, 101, .86) 58%, rgba(32, 50, 76, .92));
     }
 
     @keyframes loadBarBreath {
@@ -2590,13 +2587,15 @@
       filter: drop-shadow(0 0 6px color-mix(in srgb, var(--gc, var(--warning)) 65%, transparent));
     }
 
-    /* 成果卡片：金色高光，营造"有影响力的成功成果"氛围 */
+    /* 成果卡片：轻量暖色提示，避免抢占右栏视觉重心 */
     .task-item.done {
+      min-height: 86px;
+      padding: 9px 8px 9px 14px;
       background:
-        linear-gradient(90deg, color-mix(in srgb, var(--warning) 16%, transparent), transparent 60%),
-        rgba(26, 22, 16, .74);
-      border-color: color-mix(in srgb, var(--warning) 32%, var(--rule));
-      box-shadow: 0 0 22px -8px color-mix(in srgb, var(--warning) 50%, transparent);
+        linear-gradient(90deg, color-mix(in srgb, var(--warning) 8%, transparent), transparent 52%),
+        rgba(20, 22, 27, .68);
+      border-color: color-mix(in srgb, var(--warning) 18%, var(--rule));
+      box-shadow: none;
     }
     .task-item.running {
       background:
@@ -2609,27 +2608,27 @@
       border-color: transparent;
       color: #1a1206;
     }
-    .task-item.done .task-name { color: #fff; }
+    .task-item.done .task-name { color: var(--ink); }
     .task-item.done .tp-label {
-      background: color-mix(in srgb, var(--warning) 20%, transparent);
-      color: var(--warning-deep);
+      background: color-mix(in srgb, var(--warning) 12%, transparent);
+      color: color-mix(in srgb, var(--warning) 72%, var(--ink-soft));
     }
     .task-item.done .tp-text {
-      color: #fdf3e2;
-      font-weight: 600;
+      color: rgba(232, 235, 240, .86);
+      font-weight: 400;
       font-size: 12px;
     }
-    /* 成果配图：放大 + 暗角压边让文字更聚焦、图更像"成果展板" */
+    /* 成果配图：保留缩略图质感，但压低暖色与遮罩强度 */
     .task-item.done .task-monitor {
       flex-basis: 146px;
-      border-color: color-mix(in srgb, var(--warning) 34%, var(--rule));
+      border-color: color-mix(in srgb, var(--warning) 18%, var(--rule));
     }
     .task-item.done .task-monitor::after {
       content: "";
       position: absolute;
       inset: 0;
       z-index: 1;
-      background: linear-gradient(100deg, rgba(20, 16, 10, .6), transparent 52%);
+      background: linear-gradient(100deg, rgba(12, 14, 19, .38), transparent 56%);
       pointer-events: none;
     }
     .task-monitor .mon-img {
@@ -2640,15 +2639,6 @@
       object-fit: cover;
       opacity: .95;
     }
-    .task-monitor.result .mon-label {
-      z-index: 2;
-      padding: 1px 6px;
-      border-radius: 2px;
-      background: color-mix(in srgb, var(--warning) 30%, rgba(8, 11, 16, .7));
-      color: #fff5e4;
-      font-weight: 600;
-    }
-
     @keyframes taskScroll {
       from { transform: translateY(0); }
       to { transform: translateY(-50%); }
@@ -2749,15 +2739,7 @@
     }
 
     .task-item::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 3px;
-      background: var(--accent);
-      opacity: 0.86;
-      box-shadow: 0 0 24px color-mix(in srgb, var(--accent) 36%, transparent);
+      content: none;
     }
 
     .task-head {
@@ -2866,6 +2848,21 @@
       font-size: 12px;
       font-weight: 760;
       letter-spacing: 1px;
+    }
+
+    .right-panel .task-item.running .task-head {
+      justify-content: flex-start;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .right-panel .task-item.running .task-title {
+      flex: 0 0 auto;
+    }
+
+    .right-panel .task-item.running .task-live {
+      flex: 0 0 auto;
+      margin-top: 0;
     }
 
     .task-stats {
@@ -3194,13 +3191,11 @@
                   <div class="task-info">
                     <div class="task-head">
                       <div class="task-title"><div><div class="task-name">药物筛选智能体 MolClaw</div><div class="task-domain">联合北京大学</div></div></div>
-                      <span class="task-live done">已完成</span>
                     </div>
                     <div class="task-progress"><span class="tp-label">成果</span><span class="tp-text">端到端自动化药物分子评价、筛选及优化</span></div>
                   </div>
                   <div class="task-monitor result">
                     <img class="mon-img" src="./outcomes/molclaw.png" alt="药物筛选成果配图" loading="lazy">
-                    <span class="mon-label">成果</span>
                   </div>
                 </article>
 
@@ -3208,13 +3203,11 @@
                   <div class="task-info">
                     <div class="task-head">
                       <div class="task-title"><div><div class="task-name">生物多智能体 OriGene “元生”</div><div class="task-domain">联合临港实验室</div></div></div>
-                      <span class="task-live done">已完成</span>
                     </div>
                     <div class="task-progress"><span class="tp-label">成果</span><span class="tp-text">超越闭源模型，可发现原创靶标</span></div>
                   </div>
                   <div class="task-monitor result">
                     <img class="mon-img" src="./outcomes/origene.png" alt="生物多智能体成果配图" loading="lazy">
-                    <span class="mon-label">成果</span>
                   </div>
                 </article>
 
@@ -3222,13 +3215,11 @@
                   <div class="task-info">
                     <div class="task-head">
                       <div class="task-title"><div><div class="task-name">储能材料和电网跨尺度优化</div><div class="task-domain">联合中海储能、石油大学</div></div></div>
-                      <span class="task-live done">已完成</span>
                     </div>
                     <div class="task-progress"><span class="tp-label">成果</span><span class="tp-text">完成液流电池示范项目，已部署应用</span></div>
                   </div>
                   <div class="task-monitor result">
                     <img class="mon-img" src="./outcomes/energy.png" alt="储能材料成果配图" loading="lazy">
-                    <span class="mon-label">成果</span>
                   </div>
                 </article>
 
@@ -3236,13 +3227,11 @@
                   <div class="task-info">
                     <div class="task-head">
                       <div class="task-title"><div><div class="task-name">超大规模无缺陷中性原子量子阵列原创算法</div><div class="task-domain">联合合肥实验室</div></div></div>
-                      <span class="task-live done">已完成</span>
                     </div>
                     <div class="task-progress"><span class="tp-label">成果</span><span class="tp-text">世界首个常数时间原子排布</span></div>
                   </div>
                   <div class="task-monitor result">
                     <img class="mon-img" src="./outcomes/quantum.png" alt="量子阵列成果配图" loading="lazy">
-                    <span class="mon-label">成果</span>
                   </div>
                 </article>
 
@@ -3250,13 +3239,11 @@
                   <div class="task-info">
                     <div class="task-head">
                       <div class="task-title"><div><div class="task-name">同震破裂过程分析智能体</div><div class="task-domain">联合国家地震局</div></div></div>
-                      <span class="task-live done">已完成</span>
                     </div>
                     <div class="task-progress"><span class="tp-label">成果</span><span class="tp-text">分析效率提升一倍以上</span></div>
                   </div>
                   <div class="task-monitor result">
                     <img class="mon-img" src="./outcomes/seismic.png" alt="同震分析成果配图" loading="lazy">
-                    <span class="mon-label">成果</span>
                   </div>
                 </article>
 
@@ -3283,7 +3270,7 @@
                   </div>
                 </article>
 
-                <article class="task-item running" style="--accent: #57b8c4;" data-task="电催化">
+                <article class="task-item running" style="--accent: #7aa5db;" data-task="电催化">
                   <div class="task-info">
                     <div class="task-head">
                       <div class="task-title"><div><div class="task-name">电催化</div><div class="task-domain">领域：化学</div></div></div>
@@ -3304,7 +3291,7 @@
                   </div>
                 </article>
 
-                <article class="task-item running" style="--accent: #9385d6;" data-task="光刻胶">
+                <article class="task-item running" style="--accent: #7aa5db;" data-task="光刻胶">
                   <div class="task-info">
                     <div class="task-head">
                       <div class="task-title"><div><div class="task-name">光刻胶</div><div class="task-domain">领域：材料科学</div></div></div>
@@ -3371,9 +3358,9 @@
           icon: '<circle cx="6" cy="7" r="2"/><circle cx="6" cy="17" r="2"/><circle cx="18" cy="12" r="2"/><path d="M8 7.7l8 3.4M8 16.3l8-3.4"/>' },
         { t: "干实验验证", s: "模型推理 · 数值模拟",   c: "var(--gold)",   a: -54,
           icon: '<rect x="3" y="5" width="18" height="12" rx="1"/><path d="M7.5 21h9M12 17v4"/><path d="M6.5 12l2.5-3 2 2 3-4.5"/>' },
-        { t: "湿实验验证", s: "自主实验 · 实测回流",   c: "var(--orange)", a: -126,
+        { t: "湿实验验证", s: "自主实验 · 实测回流",   c: "#5b88c2", a: -126,
           icon: '<path d="M9 3v6L4.3 17.2A2 2 0 0 0 6 20.2h12a2 2 0 0 0 1.7-3L15 9V3"/><path d="M8 3h8M7.5 14h9"/>' },
-        { t: "迭代优化", s: "归因分析 · 策略进化",     c: "var(--violet)", a: -198,
+        { t: "迭代优化", s: "归因分析 · 策略进化",     c: "#a4b870", a: -198,
           icon: '<circle cx="12" cy="12" r="6.5"/><circle cx="12" cy="12" r="2"/><path d="M12 5.5v2M18.5 12h-2M12 18.5v-2M5.5 12h2"/>' },
       ];
       const nodeEls = [];
@@ -3729,10 +3716,10 @@
     // ===== 中央：螺旋上升粒子（参数集中在 SP，可被控制面板实时调整）=====
     const spiralGroup = new THREE.Group(); group.add(spiralGroup);
     const SP = {
-      count: 680, strands: 3, turns: 1.9, height: 10.4, r0: 7, r1: 1.1, flow: 0.12,
-      spin: 0.5, spread: 0.8, drift: 0.85, depth: 0.35,
-      glowSize: 1.3, glowOp: 0.14, midSize: 0.6, midOp: 0.72, coreSize: 0.46, coreOp: 0.68,
-      baseSize: 8, baseOp: 0,
+      count: 680, strands: 3, turns: 1.9, height: 8.6, r0: 5.8, r1: 0.9, flow: 0.12,
+      spin: 0.5, spread: 0.65, drift: 0.65, depth: 0.35,
+      glowSize: 1.05, glowOp: 0.14, midSize: 0.5, midOp: 0.72, coreSize: 0.38, coreOp: 0.68,
+      baseSize: 6.2, baseOp: 0,
       loR: 1, loG: 1, loB: 1, hiR: 0.059, hiG: 0.071, hiB: 0.098
     };
     let pf0, pstr, pdr, pda, pdy, pdrift, pjit;
